@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Event Attendance Tracker</title>
+		<link
+			rel="stylesheet"
+			href="{{ url_for('static', filename='styles.css') }}"
+		/>
+	</head>
+	<body>
+		<div>
+			<h1>Scan QR Code for Attendance</h1>
+			<form id="cameraForm" enctype="multipart/form-data">
+				<input type="file" accept="image/*" capture="camera" id="cameraInput" />
+				<select id="actionSelector">
+					<option value="check-in">Check-In</option>
+					<option value="check-out">Check-Out</option>
+				</select>
+				<select id="lectureSelector"></select>
+				<button type="button" onclick="submitQRCode()">Submit</button>
+			</form>
+		</div>
+
+		<div id="registerLectureTab" style="margin-top: 20px">
+			<h2>Register New Lecture</h2>
+			<form id="lectureForm">
+				<input
+					type="text"
+					id="newLectureName"
+					placeholder="Enter Lecture Name"
+					required
+				/>
+				<button type="button" onclick="registerLecture()">Register</button>
+			</form>
+		</div>
+
+		<div id="historyTab" style="margin-top: 20px">
+			<h2>Attendance History</h2>
+			<select id="lectureFilter" onchange="fetchHistory()">
+				<option value="">All Lectures</option>
+				<!-- Options will be populated here -->
+			</select>
+			<table id="historyList">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Organization</th>
+						<th>Lecture</th>
+						<th>Check-In Time</th>
+						<th>Check-Out Time</th>
+					</tr>
+				</thead>
+				<tbody>
+					<!-- Attendance records will be inserted here -->
+				</tbody>
+			</table>
+		</div>
+
+		<script src="{{ url_for('static', filename='script.js') }}"></script>
+	</body>
+</html>

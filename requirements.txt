@@ -1,0 +1,7 @@
+Flask
+Flask-SQLAlchemy
+pyzbar
+Pillow
+opencv-python-headless
+numpy
+vobject

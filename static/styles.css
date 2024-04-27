@@ -1,0 +1,96 @@
+:root {
+	--background-color: #121212;
+	--text-color: #e0e0e0;
+	--button-bg-color: #263238;
+	--button-hover-bg-color: #37474f;
+	--box-bg-color: #333333;
+	--border-color: #555;
+	--header-bg-color: #1a1a1a;
+	--row-hover-color: #404040;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	background-color: var(--background-color);
+	color: var(--text-color);
+	margin: 0;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-height: 100vh;
+}
+
+button,
+input[type='file'],
+select,
+input[type='text'] {
+	padding: 10px;
+	margin: 10px 5px;
+	border-radius: 5px;
+	border: 1px solid var(--border-color);
+	background-color: var(--button-bg-color);
+	color: var(--text-color);
+	font-size: 16px;
+}
+
+button:hover {
+	background-color: var(--button-hover-bg-color);
+}
+
+#registerLectureTab,
+#historyTab {
+	width: 90%;
+	max-width: 960px;
+	padding: 20px;
+	border: 2px solid var(--border-color);
+	margin-top: 20px;
+	background: var(--box-bg-color);
+}
+
+#historyList {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+}
+
+#historyList th,
+#historyList td {
+	text-align: left;
+	padding: 12px 15px;
+	border-bottom: 1px solid var(--border-color);
+}
+
+#historyList thead {
+	background-color: var(--header-bg-color);
+	color: var(--text-color);
+}
+
+#historyList tbody tr:hover {
+	background-color: var(--row-hover-color);
+}
+
+#historyList th {
+	position: sticky;
+	top: 0;
+}
+
+@media (min-width: 768px) {
+	.content-wrapper {
+		flex-direction: row;
+	}
+
+	.image-container,
+	.data-container {
+		width: 50%;
+		margin: 0 10px;
+		height: 250px;
+	}
+
+	input[type='text'],
+	select,
+	button {
+		margin-top: 0;
+		margin-right: 10px;
+	}
+}

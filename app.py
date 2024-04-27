@@ -8,6 +8,7 @@ import numpy as np
 import base64
 import vobject
 from datetime import datetime
+import pytz
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///attendance.db'
@@ -28,6 +29,14 @@ class Attendance(db.Model):
 class Lecture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), unique=True)
+    lecturer = db.Column(db.String(100))
+    start_time = db.Column(db.DateTime)
+    end_time = db.Column(db.DateTime)
+
+
+def convert_utc_to_edt(utc_dt):
+    eastern = pytz.timezone('America/New_York')
+    return utc_dt.replace(tzinfo=pytz.utc).astimezone(eastern)
 
 
 @app.route('/')
@@ -38,7 +47,14 @@ def index():
 @app.route('/lectures', methods=['GET'])
 def get_lectures():
     lectures = Lecture.query.all()
-    return jsonify([{'id': lecture.id, 'name': lecture.name} for lecture in lectures])
+    lectures_data = [{
+        'id': lecture.id,
+        'name': lecture.name,
+        'lecturer': lecture.lecturer,
+        'start_time': lecture.start_time.isoformat() if lecture.start_time else None,
+        'end_time': lecture.end_time.isoformat() if lecture.end_time else None
+    } for lecture in lectures]
+    return jsonify(lectures_data)
 
 
 @app.route('/register_lecture', methods=['POST'])
@@ -48,10 +64,15 @@ def register_lecture():
     if existing_lecture:
         return jsonify({'error': 'Lecture already exists'}), 409
 
-    new_lecture = Lecture(name=data['name'])
+    new_lecture = Lecture(
+        name=data['name'],
+        lecturer=data['lecturer'],
+        start_time=datetime.fromisoformat(data['start_time']),
+        end_time=datetime.fromisoformat(data['end_time'])
+    )
     db.session.add(new_lecture)
     db.session.commit()
-    return jsonify({'id': new_lecture.id, 'name': new_lecture.name}), 201
+    return jsonify({'id': new_lecture.id, 'name': new_lecture.name, 'lecturer': new_lecture.lecturer, 'start_time': new_lecture.start_time.isoformat(), 'end_time': new_lecture.end_time.isoformat()}), 201
 
 
 @app.route('/scan', methods=['POST'])
@@ -111,9 +132,9 @@ def history():
         'first_name': record.Attendance.first_name,
         'last_name': record.Attendance.last_name,
         'organization': record.Attendance.organization,
-        'check_in_time': record.Attendance.check_in_time.isoformat() if record.Attendance.check_in_time else 'Not Checked In',
-        'check_out_time': record.Attendance.check_out_time.isoformat() if record.Attendance.check_out_time else 'Not Checked Out',
-        'lecture_name': record.name  # Changed from lecture_id to lecture_name
+        'check_in_time': convert_utc_to_edt(record.Attendance.check_in_time).isoformat() if record.Attendance.check_in_time else 'Not Checked In',
+        'check_out_time': convert_utc_to_edt(record.Attendance.check_out_time).isoformat() if record.Attendance.check_out_time else 'Not Checked Out',
+        'lecture_name': record.name
     } for record in records])
 
 

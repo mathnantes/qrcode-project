@@ -16,7 +16,7 @@
 	<body>
 		<div class="menu">
 			<button class="menu-button" onclick="toggleMenu()">☰</button>
-			<div class="menu-content" id="menuContent" style="display: none">
+			<div class="menu-content" id="menuContent">
 				<a href="#" onclick="showSection('main')">Home</a>
 				<a href="#" onclick="showSection('lectures')">Lectures</a>
 				<a href="#" onclick="showSection('settings')">Settings</a>
@@ -34,8 +34,7 @@
 				<select id="lectureSelector"></select>
 				<button type="button" onclick="submitQRCode()">Submit</button>
 			</form>
-
-			<div id="historyTab" style="margin-top: 20px">
+			<div id="historyTab">
 				<h2>Attendance History</h2>
 				<select id="lectureFilter" onchange="fetchHistory()">
 					<option value="">All Lectures</option>
@@ -55,7 +54,7 @@
 			</div>
 		</div>
 
-		<div id="lectures" class="content" style="display: none">
+		<div id="lectures" class="content">
 			<h2>Manage Lectures</h2>
 			<form id="lectureForm">
 				<input
@@ -70,18 +69,8 @@
 					placeholder="Enter Lecturer's Name"
 					required
 				/>
-				<input
-					type="datetime-local"
-					id="startTime"
-					placeholder="Start Time"
-					required
-				/>
-				<input
-					type="datetime-local"
-					id="endTime"
-					placeholder="End Time"
-					required
-				/>
+				<input type="datetime-local" id="startTime" required />
+				<input type="datetime-local" id="endTime" required />
 				<button type="button" onclick="registerLecture()">Register</button>
 			</form>
 			<div id="registeredLectures">
@@ -102,7 +91,7 @@
 			</div>
 		</div>
 
-		<div id="settings" class="content" style="display: none">
+		<div id="settings" class="content">
 			<h2>Settings</h2>
 			<!-- Settings content will be added here later -->
 		</div>

@@ -88,6 +88,7 @@ input[type='text']:hover {
 	background: var(--box-bg-color);
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 	overflow: hidden;
+	display: hidden;
 }
 
 .table-style {
@@ -117,37 +118,11 @@ input[type='text']:hover {
 	top: 0;
 }
 
-#historyList {
-	width: 100%;
-	border-collapse: collapse;
-	margin-top: 20px;
-}
-
-#historyList th,
-#historyList td {
-	text-align: left;
-	padding: 12px 15px;
-	border-bottom: 1px solid var(--border-color);
-}
-
-#historyList thead {
-	background-color: var(--header-bg-color);
-	color: var(--text-color);
-}
-
-#historyList tbody tr:hover {
-	background-color: var(--row-hover-color);
-}
-
-#historyList th {
-	position: sticky;
-	top: 0;
-}
-
 /* Responsive Design */
 @media (max-width: 768px) {
 	body {
 		font-size: 14px;
+		margin: 5%;
 	}
 
 	button,
@@ -210,54 +185,6 @@ input[type='text']:hover {
 	}
 
 	.table-style td:before {
-		content: attr(data-label);
-		position: absolute;
-		left: 10px;
-		width: 45%;
-		padding-right: 10px;
-		text-align: left;
-		font-weight: bold;
-		color: var(--text-color);
-	}
-
-	#historyList th,
-	#historyList td {
-		padding: 8px;
-	}
-
-	/* Transforming the table for mobile view */
-	#historyList,
-	#historyList thead,
-	#historyList tbody,
-	#historyList th,
-	#historyList td,
-	#historyList tr {
-		display: block;
-	}
-
-	#historyList thead tr {
-		position: absolute;
-		top: -9999px;
-		left: -9999px;
-	}
-
-	#historyList tr {
-		border: 1px solid var(--border-color);
-		margin-bottom: 5px;
-		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-		padding: 10px;
-		background-color: var(--box-bg-color);
-	}
-
-	#historyList td {
-		border: none;
-		position: relative;
-		padding-left: 50%;
-		text-align: right;
-		margin-bottom: 10px;
-	}
-
-	#historyList td:before {
 		content: attr(data-label);
 		position: absolute;
 		left: 10px;

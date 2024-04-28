@@ -20,7 +20,6 @@
 				<a href="#" onclick="showSection('main')">Home</a>
 				<a href="#" onclick="showSection('lectures')">Lectures</a>
 				<a href="#" onclick="showSection('settings')">Settings</a>
-				<a href="#" id="themeToggle" onclick="toggleTheme()">Toggle Theme</a>
 			</div>
 		</div>
 
@@ -41,7 +40,7 @@
 				<select id="lectureFilter" onchange="fetchHistory()">
 					<option value="">All Lectures</option>
 				</select>
-				<table id="historyList">
+				<table id="historyList" class="table-style">
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -103,7 +102,7 @@
 			</div>
 		</div>
 
-		<div id="settings" the="content" style="display: none">
+		<div id="settings" class="content" style="display: none">
 			<h2>Settings</h2>
 			<!-- Settings content will be added here later -->
 		</div>

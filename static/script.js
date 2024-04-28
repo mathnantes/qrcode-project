@@ -1,23 +1,3 @@
-let isDarkTheme = true; // Default theme is dark
-
-function toggleTheme() {
-	isDarkTheme = !isDarkTheme;
-	if (isDarkTheme) {
-		document.documentElement.setAttribute('data-theme', 'dark');
-	} else {
-		document.documentElement.setAttribute('data-theme', 'light');
-	}
-}
-
-function toggleMenu() {
-	var menuContent = document.getElementById('menuContent');
-	if (menuContent.style.display === 'none') {
-		menuContent.style.display = 'block';
-	} else {
-		menuContent.style.display = 'none';
-	}
-}
-
 window.addEventListener('load', function () {
 	fetchLectures();
 	fetchHistory();
@@ -84,7 +64,6 @@ function fetchHistory() {
 				.querySelector('tbody');
 			tableBody.innerHTML = ''; // Clear previous entries
 			data.forEach((record) => {
-				// Check and format check-in time if valid
 				const checkInTime = record.check_in_time
 					? new Date(record.check_in_time)
 					: null;
@@ -100,7 +79,6 @@ function fetchHistory() {
 						  })
 						: '';
 
-				// Check and format check-out time if valid
 				const checkOutTime = record.check_out_time
 					? new Date(record.check_out_time)
 					: null;
@@ -118,12 +96,12 @@ function fetchHistory() {
 
 				const row = tableBody.insertRow();
 				row.innerHTML = `
-                    <td data-label="Name:">${record.first_name} ${record.last_name}</td>
-                    <td data-label="Organization:">${record.organization}</td>
-                    <td data-label="Lecture:">${record.lecture_name}</td>
-                    <td data-label="Check-In Time:">${formattedCheckInTime}</td>
-                    <td data-label="Check-Out Time:">${formattedCheckOutTime}</td>
-                `;
+                <td data-label="Name:">${record.first_name} ${record.last_name}</td>
+                <td data-label="Organization:">${record.organization}</td>
+                <td data-label="Lecture:">${record.lecture_name}</td>
+                <td data-label="Check-In Time:">${formattedCheckInTime}</td>
+                <td data-label="Check-Out Time:">${formattedCheckOutTime}</td>
+            `;
 			});
 		})
 		.catch((error) => console.error('Error loading history:', error));
@@ -156,15 +134,15 @@ function fetchLectures() {
 
 				const row = lecturesList.insertRow();
 				row.innerHTML = `
-                    <td data-label="Lecture Name:">${lecture.name}</td>
-                    <td data-label="Lecturer:">${lecture.lecturer}</td>
-                    <td data-label="Start Time:">${new Date(
-											lecture.start_time
-										).toLocaleString('pt-BR')}</td>
-                    <td data-label="End Time:">${new Date(
-											lecture.end_time
-										).toLocaleString('pt-BR')}</td>
-                `;
+                <td data-label="Lecture Name:">${lecture.name}</td>
+                <td data-label="Lecturer:">${lecture.lecturer}</td>
+                <td data-label="Start Time:">${new Date(
+									lecture.start_time
+								).toLocaleString('pt-BR')}</td>
+                <td data-label="End Time:">${new Date(
+									lecture.end_time
+								).toLocaleString('pt-BR')}</td>
+            `;
 			});
 		})
 		.catch((error) => console.error('Error loading lectures:', error));
@@ -181,7 +159,7 @@ function registerLecture() {
 	const lectureName = document.getElementById('newLectureName').value;
 	const lecturerName = document.getElementById('lecturerName').value;
 	const startTime = document.getElementById('startTime').value;
-	const endTime = document.getElementById('endTime').value;
+	theEndTime = document.getElementById('endTime').value;
 
 	fetch('/register_lecture', {
 		method: 'POST',

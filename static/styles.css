@@ -1,21 +1,40 @@
 :root {
+	/* Dark theme (default) */
 	--background-color: #121212;
-	--text-color: #e0e0e0;
-	--button-bg-color: #263238;
-	--button-hover-bg-color: #37474f;
-	--box-bg-color: #333333;
-	--border-color: #37474f;
-	--header-bg-color: #1a1a1a;
-	--row-hover-color: #404040;
-	--input-bg-color: #222222;
+	--text-color: #e8e6e3;
+	--button-bg-color: #333740;
+	--button-hover-bg-color: #4a4b50;
+	--box-bg-color: #1e1e1e;
+	--border-color: #424245;
+	--header-bg-color: #202124;
+	--row-hover-color: #2c2c2f;
+	--input-bg-color: #28282b;
+	--accent-color: #1a73e8;
 }
 
+[data-theme='light'] {
+	/* Light theme */
+	--background-color: #ffffff;
+	--text-color: #202124;
+	--button-bg-color: #f8f9fa;
+	--button-hover-bg-color: #e8eaed;
+	--box-bg-color: #ffffff;
+	--border-color: #dadce0;
+	--header-bg-color: #f1f3f4;
+	--row-hover-color: #f6f7f8;
+	--input-bg-color: #ffffff;
+	--accent-color: #4285f4;
+}
+
+html,
 body {
+	width: 100%;
+	overflow-x: hidden;
+	margin: 0;
+	padding: 0;
 	font-family: 'Roboto', sans-serif;
 	background-color: var(--background-color);
 	color: var(--text-color);
-	margin: 0;
-	padding: 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
@@ -26,25 +45,43 @@ body {
 button,
 input[type='file'],
 select,
-input[type='text'] {
+input[type='text'],
+textarea {
 	padding: 12px 20px;
 	margin: 10px;
 	border-radius: 4px;
 	border: none;
-	background-color: var(--input-bg-color);
+	background-color: var(--button-bg-color);
 	color: var(--text-color);
 	font-size: 16px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.24), 0 1px 5px rgba(0, 0, 0, 0.19);
 	transition: box-shadow 0.3s;
+	width: 100%; /* Full width for form elements */
+	box-sizing: border-box; /* Include padding in width calculation */
 }
 
 button:hover,
 button:focus,
 input[type='file']:hover,
 select:hover,
-input[type='text']:hover {
+input[type='text']:hover,
+textarea:hover {
 	background-color: var(--button-hover-bg-color);
+	color: var(--accent-color);
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24), 0 1px 18px rgba(0, 0, 0, 0.19);
+}
+
+button,
+a {
+	background-color: var(--button-bg-color);
+	color: var(--text-color);
+	border: 1px solid var(--border-color);
+}
+
+button:hover,
+a:hover {
+	background-color: var(--button-hover-bg-color);
+	color: var(--accent-color);
 }
 
 .menu {
@@ -73,6 +110,7 @@ input[type='text']:hover {
 	text-decoration: none;
 	font-size: 18px;
 	transition: background-color 0.3s;
+	color: var(--accent-color); /* Accent color for links */
 }
 
 .menu-content a:hover {
@@ -90,12 +128,14 @@ input[type='text']:hover {
 	overflow: hidden;
 }
 
+.table-style,
 #historyList {
 	width: 100%;
-	border-collapse: collapse;
-	margin-top: 20px;
+	overflow-x: auto; /* Allows table to scroll horizontally on small screens */
 }
 
+.table-style th,
+.table-style td,
 #historyList th,
 #historyList td {
 	text-align: left;
@@ -103,87 +143,89 @@ input[type='text']:hover {
 	border-bottom: 1px solid var(--border-color);
 }
 
+.table-style thead,
 #historyList thead {
 	background-color: var(--header-bg-color);
 	color: var(--text-color);
 }
 
+.table-style tbody tr:hover,
 #historyList tbody tr:hover {
 	background-color: var(--row-hover-color);
 }
 
-#historyList th {
-	position: sticky;
-	top: 0;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-	body {
-		font-size: 14px;
+/* Media queries for desktop environments */
+@media (min-width: 1025px) {
+	.content {
+		width: 80%; /* Larger content area for desktop */
 	}
 
 	button,
 	input[type='file'],
 	select,
-	input[type='text'] {
-		padding: 10px;
-		font-size: 14px;
-	}
-
-	.menu-button {
-		margin-left: 10px;
+	input[type='text'],
+	textarea {
+		padding: 15px 24px; /* Larger padding for desktop */
+		font-size: 18px; /* Larger font size for desktop */
 	}
 
 	.menu-content a {
-		padding: 10px;
-		font-size: 16px;
+		font-size: 20px; /* Larger font size for links */
 	}
+}
 
+/* Media queries for mobile environments */
+@media (max-width: 1024px) {
 	.content {
 		width: 100%;
 		margin-top: 50px;
 		padding: 15px;
 	}
 
-	#historyList th,
-	#historyList td {
-		padding: 8px;
+	button,
+	input[type='file'],
+	select,
+	input[type='text'],
+	textarea {
+		font-size: 14px; /* Smaller font size for mobile */
 	}
 
-	/* Transforming the table for mobile view */
-	#historyList,
-	#historyList thead,
-	#historyList tbody,
-	#historyList th,
-	#historyList td,
-	#historyList tr {
+	.menu-content {
+		display: block; /* Stacked layout for mobile menu */
+	}
+
+	table,
+	thead,
+	tbody,
+	th,
+	td,
+	tr {
 		display: block;
 	}
 
-	#historyList thead tr {
+	thead tr {
 		position: absolute;
 		top: -9999px;
 		left: -9999px;
 	}
 
-	#historyList tr {
+	tr {
 		border: 1px solid var(--border-color);
-		margin-bottom: 5px;
-		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
-		padding: 10px;
+		margin-bottom: 10px;
+		box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+		padding: 20px;
 		background-color: var(--box-bg-color);
 	}
 
-	#historyList td {
+	td {
 		border: none;
 		position: relative;
 		padding-left: 50%;
 		text-align: right;
-		margin-bottom: 10px;
+		margin-bottom: 12px;
 	}
 
-	#historyList td:before {
+	td:before {
 		content: attr(data-label);
 		position: absolute;
 		left: 10px;

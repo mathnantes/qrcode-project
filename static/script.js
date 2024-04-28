@@ -1,3 +1,23 @@
+let isDarkTheme = true; // Default theme is dark
+
+function toggleTheme() {
+	isDarkTheme = !isDarkTheme;
+	if (isDarkTheme) {
+		document.documentElement.setAttribute('data-theme', 'dark');
+	} else {
+		document.documentElement.setAttribute('data-theme', 'light');
+	}
+}
+
+function toggleMenu() {
+	var menuContent = document.getElementById('menuContent');
+	if (menuContent.style.display === 'none') {
+		menuContent.style.display = 'block';
+	} else {
+		menuContent.style.display = 'none';
+	}
+}
+
 window.addEventListener('load', function () {
 	fetchLectures();
 	fetchHistory();
@@ -117,7 +137,7 @@ function fetchLectures() {
 	fetch('/lectures')
 		.then((response) => response.json())
 		.then((lectures) => {
-			lectures.sort((a, b) => a.name.localeCompare(b.name)); // Sort lectures alphabetically
+			lectures.sort((a, b) => a.name.localeCompare(b.name));
 
 			const lectureSelector = document.getElementById('lectureSelector');
 			const lectureFilter = document.getElementById('lectureFilter');
@@ -136,14 +156,14 @@ function fetchLectures() {
 
 				const row = lecturesList.insertRow();
 				row.innerHTML = `
-                    <td>${lecture.name}</td>
-                    <td>${lecture.lecturer}</td>
-                    <td>${new Date(lecture.start_time).toLocaleString(
-											'pt-BR'
-										)}</td>
-                    <td>${new Date(lecture.end_time).toLocaleString(
-											'pt-BR'
-										)}</td>
+                    <td data-label="Lecture Name:">${lecture.name}</td>
+                    <td data-label="Lecturer:">${lecture.lecturer}</td>
+                    <td data-label="Start Time:">${new Date(
+											lecture.start_time
+										).toLocaleString('pt-BR')}</td>
+                    <td data-label="End Time:">${new Date(
+											lecture.end_time
+										).toLocaleString('pt-BR')}</td>
                 `;
 			});
 		})

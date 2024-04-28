@@ -20,6 +20,7 @@
 				<a href="#" onclick="showSection('main')">Home</a>
 				<a href="#" onclick="showSection('lectures')">Lectures</a>
 				<a href="#" onclick="showSection('settings')">Settings</a>
+				<a href="#" id="themeToggle" onclick="toggleTheme()">Toggle Theme</a>
 			</div>
 		</div>
 
@@ -86,7 +87,7 @@
 			</form>
 			<div id="registeredLectures">
 				<h3>Registered Lectures</h3>
-				<table id="lecturesList">
+				<table id="lecturesList" class="table-style">
 					<thead>
 						<tr>
 							<th>Lecture Name</th>
@@ -101,7 +102,8 @@
 				</table>
 			</div>
 		</div>
-		<div id="settings" class="content" style="display: none">
+
+		<div id="settings" the="content" style="display: none">
 			<h2>Settings</h2>
 			<!-- Settings content will be added here later -->
 		</div>

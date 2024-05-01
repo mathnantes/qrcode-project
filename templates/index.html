@@ -3,11 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Event Attendance Tracker</title>
-		<link
-			rel="stylesheet"
-			href="{{ url_for('static', filename='styles.css') }}"
-		/>
+		<link rel="stylesheet" href="/static/styles.css" />
 		<link rel="manifest" href="/manifest.json" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta
@@ -15,6 +11,7 @@
 			content="black-translucent"
 		/>
 		<meta name="apple-mobile-web-app-title" content="Controle de Presença" />
+		<title>Controle de Presença</title>
 	</head>
 	<body>
 		<div class="container">
@@ -23,6 +20,7 @@
 				<div class="title"><h1>Controle de Presença</h1></div>
 			</div>
 			<div class="middle" id="content-area">
+				<!-- Default Home Content -->
 				<div class="scan-container">
 					<div class="scan">
 						<input
@@ -35,7 +33,7 @@
 						<label for="cameraInput">
 							<img
 								src="/static/qr-border.png"
-								alt="Home"
+								alt="Scan QR Code"
 								class="home-icon"
 								id="triggerCamera"
 							/>
@@ -43,62 +41,48 @@
 					</div>
 					<div class="attendance-options">
 						<div class="options">
-							<label class="radio-option"
-								><input
+							<label class="radio-option">
+								<input
 									type="radio"
 									name="attendance"
 									value="check-in"
 									checked
 								/>
-								Check-in</label
-							>
-							<label class="radio-option"
-								><input type="radio" name="attendance" value="check-out" />
-								Check-out</label
-							>
+								Check-in
+							</label>
+							<label class="radio-option">
+								<input type="radio" name="attendance" value="check-out" />
+								Check-out
+							</label>
 						</div>
 						<select id="lecture-dropdown" class="lecture-dropdown">
-							<option disabled selected>Selecionar Palestra</option>
+							<option disabled selected>Select Lecture</option>
+							<!-- Dynamic Options Added Here -->
 						</select>
-						<button class="submit-btn">Registrar</button>
+						<button class="submit-btn">Register</button>
 					</div>
 				</div>
 				<div class="last-entry"></div>
 			</div>
-
 			<div class="bottom">
 				<nav>
 					<div class="nav-bar">
-						<div class="nav-button home" id="home-btn">
+						<div class="nav-button home selected" id="home-btn">
 							<img src="/static/home-icon.png" alt="Home" />
 						</div>
 						<div class="nav-button history" id="history-btn">
-							<img src="/static/history-icon.png" alt="Home" />
+							<img src="/static/history-icon.png" alt="History" />
 						</div>
 						<div class="nav-button lectures" id="lectures-btn">
-							<img src="/static/lectures-icon.png" alt="Home" />
+							<img src="/static/lectures-icon.png" alt="Lectures" />
 						</div>
 						<div class="nav-button settings" id="settings-btn">
-							<img src="/static/settings-icon.png" alt="Home" />
+							<img src="/static/settings-icon.png" alt="Settings" />
 						</div>
 					</div>
 				</nav>
 			</div>
 		</div>
-		<svg xmlns="http://www.w3.org/2000/svg" class="svg-filters">
-			<defs>
-				<filter id="goo">
-					<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-					<feColorMatrix
-						in="blur"
-						mode="matrix"
-						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
-						result="goo"
-					/>
-					<feComposite in="SourceGraphic" in2="goo" operator="atop" />
-				</filter>
-			</defs>
-		</svg>
-		<script src="{{ url_for('static', filename='script.js') }}"></script>
+		<script src="/static/script.js"></script>
 	</body>
 </html>

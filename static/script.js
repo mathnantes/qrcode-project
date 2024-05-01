@@ -188,3 +188,60 @@ function registerLecture() {
 			alert('Failed to register lecture.');
 		});
 }
+
+// FROM NEW FRONTEND
+document.addEventListener('DOMContentLoaded', function () {
+	const buttons = document.querySelectorAll('.nav-button');
+	const contentArea = document.getElementById('content-area');
+	const defaultContentHTML = contentArea.innerHTML; // Keep the default content
+	let isFirstLoad = true; // Flag to check if it's the first load
+
+	// Function to update content based on button id
+	function updateContentArea(buttonId) {
+		switch (buttonId) {
+			case 'home-btn':
+				contentArea.innerHTML = defaultContentHTML;
+				break;
+			case 'history-btn':
+				contentArea.innerHTML = '<div>History Content will go here</div>';
+				break;
+			case 'lectures-btn':
+				contentArea.innerHTML = '<div>Lectures Content will go here</div>';
+				break;
+			case 'settings-btn':
+				contentArea.innerHTML = '<div>Settings Content will go here</div>';
+				break;
+		}
+	}
+
+	// Initialize page without transitions
+	updateContentArea('home-btn'); // Directly set initial content without transition
+	document.querySelector('#home-btn').classList.add('selected');
+	isFirstLoad = false; // Ensure transitions are allowed for subsequent clicks
+
+	buttons.forEach((button) => {
+		button.addEventListener('click', function () {
+			// Remove selected class from all buttons and add to the clicked one
+			buttons.forEach((btn) => btn.classList.remove('selected'));
+			this.classList.add('selected');
+
+			// Add transition effects
+			contentArea.classList.add('fade-out');
+			setTimeout(() => {
+				updateContentArea(this.id);
+				contentArea.classList.remove('fade-out');
+				contentArea.classList.add('fade-in');
+				setTimeout(() => {
+					contentArea.classList.remove('fade-in');
+				}, 500); // Ensure fade-in class is removed after animation
+			}, 500); // Wait for fade out to complete before updating content
+		});
+	});
+});
+
+document
+	.getElementById('triggerCamera')
+	.addEventListener('click', function (event) {
+		event.preventDefault(); // Prevent the default action of the click event
+		document.getElementById('cameraInput').click();
+	});

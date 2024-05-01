@@ -8,94 +8,97 @@
 			rel="stylesheet"
 			href="{{ url_for('static', filename='styles.css') }}"
 		/>
-		<link
-			href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap"
-			rel="stylesheet"
+		<link rel="manifest" href="/manifest.json" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta
+			name="apple-mobile-web-app-status-bar-style"
+			content="black-translucent"
 		/>
+		<meta name="apple-mobile-web-app-title" content="Controle de Presença" />
 	</head>
 	<body>
-		<div class="menu">
-			<button class="menu-button" onclick="toggleMenu()">☰</button>
-			<div class="menu-content" id="menuContent">
-				<a href="#" onclick="showSection('main')">Home</a>
-				<a href="#" onclick="showSection('lectures')">Lectures</a>
-				<a href="#" onclick="showSection('settings')">Settings</a>
+		<div class="container">
+			<div class="top">
+				<div class="circle"></div>
+				<div class="title"><h1>Controle de Presença</h1></div>
+			</div>
+			<div class="middle" id="content-area">
+				<div class="scan-container">
+					<div class="scan">
+						<input
+							type="file"
+							accept="image/*"
+							capture="camera"
+							id="cameraInput"
+							style="display: none"
+						/>
+						<label for="cameraInput">
+							<img
+								src="/static/qr-border.png"
+								alt="Home"
+								class="home-icon"
+								id="triggerCamera"
+							/>
+						</label>
+					</div>
+					<div class="attendance-options">
+						<div class="options">
+							<label class="radio-option"
+								><input
+									type="radio"
+									name="attendance"
+									value="check-in"
+									checked
+								/>
+								Check-in</label
+							>
+							<label class="radio-option"
+								><input type="radio" name="attendance" value="check-out" />
+								Check-out</label
+							>
+						</div>
+						<select id="lecture-dropdown" class="lecture-dropdown">
+							<option disabled selected>Selecionar Palestra</option>
+						</select>
+						<button class="submit-btn">Registrar</button>
+					</div>
+				</div>
+				<div class="last-entry"></div>
+			</div>
+
+			<div class="bottom">
+				<nav>
+					<div class="nav-bar">
+						<div class="nav-button home" id="home-btn">
+							<img src="/static/home-icon.png" alt="Home" />
+						</div>
+						<div class="nav-button history" id="history-btn">
+							<img src="/static/history-icon.png" alt="Home" />
+						</div>
+						<div class="nav-button lectures" id="lectures-btn">
+							<img src="/static/lectures-icon.png" alt="Home" />
+						</div>
+						<div class="nav-button settings" id="settings-btn">
+							<img src="/static/settings-icon.png" alt="Home" />
+						</div>
+					</div>
+				</nav>
 			</div>
 		</div>
-
-		<div id="main" class="content">
-			<h1>Scan QR Code for Attendance</h1>
-			<form id="cameraForm" enctype="multipart/form-data">
-				<input type="file" accept="image/*" capture="camera" id="cameraInput" />
-				<select id="actionSelector">
-					<option value="check-in">Check-In</option>
-					<option value="check-out">Check-Out</option>
-				</select>
-				<select id="lectureSelector"></select>
-				<button type="button" onclick="submitQRCode()">Submit</button>
-			</form>
-			<div id="historyTab">
-				<h2>Attendance History</h2>
-				<select id="lectureFilter" onchange="fetchHistory()">
-					<option value="">All Lectures</option>
-				</select>
-				<table id="historyList" class="table-style">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Organization</th>
-							<th>Lecture</th>
-							<th>Check-In Time</th>
-							<th>Check-Out Time</th>
-						</tr>
-					</thead>
-					<tbody></tbody>
-				</table>
-			</div>
-		</div>
-
-		<div id="lectures" class="content">
-			<h2>Manage Lectures</h2>
-			<form id="lectureForm">
-				<input
-					type="text"
-					id="newLectureName"
-					placeholder="Enter Lecture Name"
-					required
-				/>
-				<input
-					type="text"
-					id="lecturerName"
-					placeholder="Enter Lecturer's Name"
-					required
-				/>
-				<input type="datetime-local" id="startTime" required />
-				<input type="datetime-local" id="endTime" required />
-				<button type="button" onclick="registerLecture()">Register</button>
-			</form>
-			<div id="registeredLectures">
-				<h3>Registered Lectures</h3>
-				<table id="lecturesList" class="table-style">
-					<thead>
-						<tr>
-							<th>Lecture Name</th>
-							<th>Lecturer</th>
-							<th>Start Time</th>
-							<th>End Time</th>
-						</tr>
-					</thead>
-					<tbody>
-						<!-- Lecture data will be inserted here -->
-					</tbody>
-				</table>
-			</div>
-		</div>
-
-		<div id="settings" class="content">
-			<h2>Settings</h2>
-			<!-- Settings content will be added here later -->
-		</div>
-
+		<svg xmlns="http://www.w3.org/2000/svg" class="svg-filters">
+			<defs>
+				<filter id="goo">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+					<feColorMatrix
+						in="blur"
+						mode="matrix"
+						values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+						result="goo"
+					/>
+					<feComposite in="SourceGraphic" in2="goo" operator="atop" />
+				</filter>
+			</defs>
+		</svg>
 		<script src="{{ url_for('static', filename='script.js') }}"></script>
 	</body>
 </html>

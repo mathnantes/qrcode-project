@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, timedelta
 from pyzbar.pyzbar import decode
 import vobject
 from PIL import Image
@@ -137,6 +137,23 @@ def parse_vcard(vcard_string):
         return contact_info
     except Exception as e:
         return {'error': str(e)}
+
+
+@app.route('/history', methods=['GET'])
+def get_history():
+    records = Attendance.query.join(Lecture).add_columns(
+        Attendance.first_name, Attendance.last_name,
+        Attendance.organization, Attendance.check_in_time,
+        Attendance.check_out_time, Lecture.name.label('lecture_name')
+    ).all()
+    return jsonify([{
+        'first_name': record.first_name,
+        'last_name': record.last_name,
+        'organization': record.organization,
+        'check_in_time': record.check_in_time.strftime("%Y-%m-%d %H:%M") if record.check_in_time else None,
+        'check_out_time': record.check_out_time.strftime("%Y-%m-%d %H:%M") if record.check_out_time else None,
+        'lecture_name': record.lecture_name
+    } for record in records])
 
 
 if __name__ == '__main__':

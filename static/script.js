@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				populateLectureDropdown();
 				break;
 			case 'history-btn':
-				contentArea.innerHTML = '<div>History Content will go here</div>';
+				fetchHistory();
 				break;
 			case 'lectures-btn':
 				fetchLectures();
@@ -21,6 +21,48 @@ document.addEventListener('DOMContentLoaded', function () {
 				contentArea.innerHTML = '<div>Settings Content will go here</div>';
 				break;
 		}
+	}
+
+	function fetchHistory() {
+		fetch('/history')
+			.then((response) => response.json())
+			.then((data) => {
+				let historyHTML = '<div class="history-page">';
+				if (data.length) {
+					historyHTML += data
+						.map(
+							(record) => `
+                            <div class="history-card">
+                                <div class="history-info">Name: ${
+																	record.first_name
+																} ${record.last_name}</div>
+                                <div class="history-info">Organization: ${
+																	record.organization
+																}</div>
+                                <div class="history-info">Check-in: ${
+																	record.check_in_time || 'Not Checked In'
+																}</div>
+                                <div class="history-info">Check-out: ${
+																	record.check_out_time || 'Not Checked Out'
+																}</div>
+                                <div class="history-info">Lecture: ${
+																	record.lecture_name
+																}</div>
+                            </div>
+                        `
+						)
+						.join('');
+				} else {
+					historyHTML += `
+                    <div class="no-history">
+                        <div class="no-history-text">No attendance records available.</div>
+                    </div>
+                `;
+				}
+				historyHTML += '</div>'; // Close history-page div
+				contentArea.innerHTML = historyHTML;
+			})
+			.catch((error) => console.error('Error loading history:', error));
 	}
 
 	// Fetch lectures from server and update content area
@@ -154,6 +196,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 
+	document
+		.getElementById('triggerCamera')
+		.addEventListener('click', function (event) {
+			event.preventDefault(); // Prevent default behavior
+			document.getElementById('cameraInput').click(); // Open file dialog
+		});
+
 	let selectedFile = null;
 
 	// Event listener for file input change to store the file temporarily
@@ -163,13 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (event.target.files.length > 0) {
 				selectedFile = event.target.files[0]; // Store file temporarily
 			}
-		});
-
-	document
-		.getElementById('triggerCamera')
-		.addEventListener('click', function (event) {
-			event.preventDefault(); // Prevent the default action of the click event
-			document.getElementById('cameraInput').click();
 		});
 
 	// Event listener for the "Register" button

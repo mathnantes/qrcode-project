@@ -154,11 +154,71 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 
+	let selectedFile = null;
+
+	// Event listener for file input change to store the file temporarily
+	document
+		.getElementById('cameraInput')
+		.addEventListener('change', function (event) {
+			if (event.target.files.length > 0) {
+				selectedFile = event.target.files[0]; // Store file temporarily
+			}
+		});
+
 	document
 		.getElementById('triggerCamera')
 		.addEventListener('click', function (event) {
 			event.preventDefault(); // Prevent the default action of the click event
 			document.getElementById('cameraInput').click();
+		});
+
+	// Event listener for the "Register" button
+	document
+		.querySelector('.submit-btn')
+		.addEventListener('click', function (event) {
+			event.preventDefault(); // Prevent form submission
+			if (!selectedFile) {
+				alert('Please select an image to scan.');
+				return;
+			}
+			if (!document.querySelector('input[name="attendance"]:checked')) {
+				alert('Please select either check-in or check-out.');
+				return;
+			}
+			if (document.getElementById('lecture-dropdown').selectedIndex == 0) {
+				alert('Please select a lecture.');
+				return;
+			}
+
+			const formData = new FormData();
+			formData.append('file', selectedFile);
+			formData.append(
+				'action',
+				document.querySelector('input[name="attendance"]:checked').value
+			);
+			formData.append(
+				'lecture_id',
+				document.getElementById('lecture-dropdown').value
+			);
+
+			fetch('/scan', {
+				method: 'POST',
+				body: formData,
+			})
+				.then((response) => response.json())
+				.then((data) => {
+					if (data.error) {
+						alert(data.error);
+					} else {
+						console.log('QR Code Data:', data.decoded_data);
+						alert('Attendance recorded successfully!');
+					}
+				})
+				.catch((error) => console.error('Error:', error));
+
+			// Clear the form and reset file after submission
+			selectedFile = null;
+			document.getElementById('cameraInput').value = '';
 		});
 });
 

@@ -214,11 +214,18 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 
-	// Event listener for the "Register" button
+	function clearForm() {
+		document.getElementById('cameraInput').value = ''; // Reset file input
+		document.querySelector('input[name="attendance"]:checked').checked = false; // Uncheck radio buttons
+		document.getElementById('lecture-dropdown').selectedIndex = 0; // Reset dropdown to default option
+		selectedFile = null; // Clear the stored file
+	}
+
 	document
 		.querySelector('.submit-btn')
 		.addEventListener('click', function (event) {
 			event.preventDefault(); // Prevent form submission
+
 			if (!selectedFile) {
 				alert('Please select an image to scan.');
 				return;
@@ -254,13 +261,13 @@ document.addEventListener('DOMContentLoaded', function () {
 					} else {
 						console.log('QR Code Data:', data.decoded_data);
 						alert('Attendance recorded successfully!');
+						clearForm(); // Clear form on successful submission
 					}
 				})
-				.catch((error) => console.error('Error:', error));
-
-			// Clear the form and reset file after submission
-			selectedFile = null;
-			document.getElementById('cameraInput').value = '';
+				.catch((error) => {
+					console.error('Error:', error);
+					clearForm(); // Clear form even if there is an error
+				});
 		});
 });
 

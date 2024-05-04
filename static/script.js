@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	// Call populateLectureDropdown on initial load
+	populateLectureDropdown();
+
 	function populateLectureDropdown() {
 		fetch('/lectures')
 			.then((response) => response.json())
@@ -48,25 +51,19 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (data.length) {
 					historyHTML += data
 						.map(
-							(record) => `
-                        <div class="history-card">
-                            <div class="history-info">Name: ${
-															record.first_name
-														} ${record.last_name}</div>
-                            <div class="history-info">Organization: ${
-															record.organization
-														}</div>
-                            <div class="history-info">Check-in: ${
-															record.check_in_time || 'Not Checked In'
-														}</div>
-                            <div class="history-info">Check-out: ${
-															record.check_out_time || 'Not Checked Out'
-														}</div>
-                            <div class="history-info">Lecture: ${
-															record.lecture_name
-														}</div>
-                        </div>
-                    `
+							(lecture) => `
+                                <div class="lecture-card-container" id="lecture-container-${lecture.id}">
+                                    <div class="delete-icon" onclick="deleteLecture(${lecture.id})">
+                                        <img src="/static/delete.png" alt="Delete">
+                                    </div>
+                                    <div class="lecture-card" id="lecture-card-${lecture.id}">
+                                        <div class="lecture-info">Name: ${lecture.name}</div>
+                                        <div class="lecture-info">Lecturer: ${lecture.lecturer}</div>
+                                        <div class="lecture-info">Start Time: ${lecture.start_time}</div>
+                                        <div class="lecture-info">End Time: ${lecture.end_time}</div>
+                                    </div>
+                                </div>
+        `
 						)
 						.join('');
 				} else {
@@ -89,13 +86,16 @@ document.addEventListener('DOMContentLoaded', function () {
 					lecturesHTML += data
 						.map(
 							(lecture) => `
-                        <div class="lecture-card">
-                            <div class="lecture-info">Name: ${lecture.name}</div>
-                            <div class="lecture-info">Lecturer: ${lecture.lecturer}</div>
-                            <div class="lecture-info">Start Time: ${lecture.start_time}</div>
-                            <div class="lecture-info">End Time: ${lecture.end_time}</div>
-                        </div>
-                    `
+                            <div class="lecture-card" id="lecture-card-${lecture.id}">
+                                <div class="delete-icon"></div>
+                                <div class="lecture-card-content">
+                                    <div class="lecture-info">Name: ${lecture.name}</div>
+                                    <div class="lecture-info">Lecturer: ${lecture.lecturer}</div>
+                                    <div class="lecture-info">Start Time: ${lecture.start_time}</div>
+                                    <div class="lecture-info">End Time: ${lecture.end_time}</div>
+                                </div>
+                            </div>
+                        `
 						)
 						.join('');
 				} else {
@@ -103,36 +103,44 @@ document.addEventListener('DOMContentLoaded', function () {
 						'<div class="no-lectures"><div class="no-lectures-text">No lectures available.</div></div>';
 				}
 				lecturesHTML += '</div>';
-				lecturesHTML += `
-                    <div class="add-lecture-btn" style="position: fixed; bottom: 10%; left: 50%; transform: translateX(-50%);">
-                        <img src="/static/add.png" alt="Add Lecture" style="width:50px; height:50px;" onclick="toggleLectureForm()">
-                    </div>
-                    <form id="lecture-form" class="lecture-form" style="display:none;">
-                        <button type="button" class="close-btn" onclick="toggleLectureForm()">&#10005;</button>
-                        <h1>Register New Lecture</h1>
-                        <div class="input-group">
-                            <label for="lecture-name">Name:</label>
-                            <input type="text" id="lecture-name" class="form-input" placeholder="Enter lecture name" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="lecturer-name">Lecturer:</label>
-                            <input type="text" id="lecturer-name" class="form-input" placeholder="Enter lecturer's name" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="start-time">Start Time:</label>
-                            <input type="datetime-local" id="start-time" class="form-input" required>
-                        </div>
-                        <div class="input-group">
-                            <label for="end-time">End Time:</label>
-                            <input type="datetime-local" id="end-time" class="form-input" required>
-                        </div>
-                        <button type="submit" class="submit-btn">Register Lecture</button>
-                    </form>
-                `;
 				contentArea.innerHTML = lecturesHTML;
+				addSwipeListeners();
+				appendAddLectureButton(); // Function to append the add lecture button
 				callback();
 			})
 			.catch((error) => console.error('Error loading lectures:', error));
+	}
+
+	function appendAddLectureButton() {
+		let addLectureHTML = `
+        <div class="add-lecture-btn" style="position: fixed; bottom: 10%; left: 50%; transform: translateX(-50%);">
+            <img src="/static/add.png" alt="Add Lecture" style="width:50px; height:50px;" onclick="toggleLectureForm()">
+        </div>
+        <form id="lecture-form" class="lecture-form" style="display:none;">
+            <button type="button" class="close-btn" onclick="toggleLectureForm()">&#10005;</button>
+            <h1>Register New Lecture</h1>
+            <div class="input-group">
+                <label for="lecture-name">Name:</label>
+                <input type="text" id="lecture-name" class="form-input" placeholder="Enter lecture name" required>
+            </div>
+            <div class="input-group">
+                <label for="lecturer-name">Lecturer:</label>
+                <input type="text" id="lecturer-name" class="form-input" placeholder="Enter lecturer's name" required>
+            </div>
+            <div class="input-group">
+                <label for="start-time">Start Time:</label>
+                <input type="datetime-local" id="start-time" class="form-input" required>
+            </div>
+            <div class="input-group">
+                <label for="end-time">End Time:</label>
+                <input type="datetime-local" id="end-time" class="form-input" required>
+            </div>
+            <button type="submit" class="submit-btn">Register Lecture</button>
+        </form>
+    `;
+		document
+			.getElementById('content-area')
+			.insertAdjacentHTML('beforeend', addLectureHTML);
 	}
 
 	buttons.forEach((button) => {
@@ -269,4 +277,75 @@ document.addEventListener('DOMContentLoaded', function () {
 			}, 500);
 		}
 	};
+
+	function addSwipeListeners() {
+		const lectureCards = document.querySelectorAll('.lecture-card');
+		lectureCards.forEach((card) => {
+			let startX, currentX;
+
+			card.addEventListener('touchstart', (e) => {
+				startX = e.changedTouches[0].clientX;
+				card.style.transition = ''; // Disable transition for smoother dragging
+			});
+
+			card.addEventListener('touchmove', (e) => {
+				currentX = e.changedTouches[0].clientX;
+				const deltaX = currentX - startX;
+
+				// Limit the swipe distance to a maximum of 150 pixels
+				if (deltaX < 0 && Math.abs(deltaX) <= 150) {
+					card.style.transform = `translateX(${deltaX}px)`;
+					card.querySelector('.delete-icon').style.opacity = Math.min(
+						Math.abs(deltaX) / 150,
+						0.5
+					);
+				}
+			});
+
+			card.addEventListener('touchend', (e) => {
+				const endX = e.changedTouches[0].clientX;
+				const threshold = 150;
+				if (startX > endX + threshold) {
+					// Commit to delete if swiped beyond threshold
+					deleteLecture(card.id.split('-')[2]);
+				} else {
+					// Reset if not swiped far enough or pulled back
+					card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+					card.style.transform = 'translateX(0)';
+					card.querySelector('.delete-icon').style.opacity = 0;
+				}
+			});
+		});
+	}
 });
+
+function deleteLecture(lectureId) {
+	if (confirm('Are you sure you want to delete this lecture?')) {
+		// User confirms deletion
+		fetch(`/delete-lecture/${lectureId}`, {
+			method: 'POST',
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				alert(data.message);
+				const lectureCard = document.getElementById(
+					`lecture-card-${lectureId}`
+				);
+				if (lectureCard) {
+					lectureCard.style.transition = 'transform 0.3s ease-in-out';
+					lectureCard.style.transform = 'translateX(-100%)'; // Animate swipe out
+					setTimeout(() => lectureCard.remove(), 300); // Wait for animation
+				}
+			})
+			.catch((error) => console.error('Error deleting lecture:', error));
+	} else {
+		// User cancels deletion
+		const lectureCard = document.getElementById(`lecture-card-${lectureId}`);
+		if (lectureCard) {
+			// Reset card position
+			lectureCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+			lectureCard.style.transform = 'translateX(0)';
+			lectureCard.parentNode.querySelector('.delete-icon').style.opacity = 0;
+		}
+	}
+}

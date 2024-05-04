@@ -1,15 +1,17 @@
-body,
-html {
+html,
+body {
 	margin: 0;
 	padding: 0;
 	height: 100%;
+	overflow: hidden; /* Prevents scrolling on the page */
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
 	display: flex;
 	flex-direction: column;
-	height: 100vh;
+	height: 100vh; /* Full height of the viewport */
+	overflow-y: auto; /* Allows scrolling within the container if needed */
 }
 
 .top,
@@ -18,6 +20,11 @@ html {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.lectures-page,
+.history-page {
+	overflow-y: auto; /* Ensures these sections can still scroll internally */
 }
 
 .top {
@@ -45,7 +52,12 @@ html {
 	justify-content: center;
 	height: 65vh;
 	background-color: white;
-	overflow-y: auto; /* Make middle section scrollable */
+	overflow-y: hidden; /* Make middle section scrollable */
+}
+
+.lectures-page,
+.history-page {
+	overflow-y: auto; /* These sections can still scroll internally */
 }
 
 .fade-out {
@@ -89,7 +101,7 @@ html {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin-top: -60px;
+	margin-top: -40px;
 	position: relative;
 }
 
@@ -248,7 +260,7 @@ label {
 	border-radius: 10px;
 	text-align: center;
 	justify-content: center;
-	margin-top: 60px;
+	margin-top: 45px;
 }
 
 /* HISTORY PAGE */
@@ -292,11 +304,15 @@ label {
 
 /* LECTURES PAGE */
 .lectures-page {
+	position: relative;
+	overflow: hidden;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-	height: 65vh;
+	height: 50vh;
 	overflow-y: auto; /* Scroll only within lectures page */
+	margin-top: 40px; /* Add top margin to push content down */
+	padding-bottom: 20px; /* Add bottom padding for spacing */
 }
 
 .lecture-form {
@@ -342,6 +358,11 @@ label {
 	font-size: 16px;
 }
 
+.lecture-card-container {
+	position: relative;
+	overflow: hidden; /* Hide the overflow to keep the delete button hidden initially */
+}
+
 .lecture-card {
 	display: flex;
 	flex-direction: column;
@@ -351,11 +372,38 @@ label {
 	background-color: #f9f9f9;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
+	transition: transform 0.3s ease-out;
+	position: relative;
+	will-change: transform;
+}
+
+.lecture-card-content {
+	position: relative;
+	width: 100%;
+	z-index: 2; /* Ensure the content is above the delete icon */
+	background: transparent;
+	padding: 10px;
 }
 
 .lecture-info {
 	font-size: 14px;
 	color: #333;
+}
+
+.delete-icon {
+	position: absolute;
+	top: 50%;
+	right: 0; /* Positioned at the start of the card on the right */
+	transform: translateY(-50%) translateX(100%); /* Adjust horizontally outside the card */
+	width: 40px;
+	height: 40px;
+	background-image: url('/static/delete.png');
+	background-size: cover;
+	background-position: center;
+	opacity: 0; /* Start hidden */
+	transition: opacity 0.3s ease;
+	z-index: 1; /* Lower than card, ensuring it's behind */
+	right: -20px;
 }
 
 .add-lecture-btn {
@@ -367,6 +415,12 @@ label {
 	height: 50px; /* Adjusted size for image */
 	cursor: pointer;
 	margin: 20px auto; /* Center it horizontally for better layout */
+	margin-bottom: 48px;
+	position: absolute; /* Make position absolute to control exact placement */
+	top: 150px; /* Position it right below the top div */
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10; /* Ensure it's above other content */
 }
 
 .add-lecture-btn img {

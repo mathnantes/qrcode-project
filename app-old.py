@@ -119,25 +119,6 @@ def scan_qr():
     return jsonify({'error': 'No QR code detected'}), 400
 
 
-@app.route('/history', methods=['GET'])
-def history():
-    lecture_id = request.args.get('lecture_id', None)
-    query = db.session.query(Attendance, Lecture.name).join(
-        Lecture, Attendance.lecture_id == Lecture.id)
-    if lecture_id:
-        query = query.filter(Attendance.lecture_id == lecture_id)
-    records = query.order_by(Attendance.check_in_time.desc()).all()
-
-    return jsonify([{
-        'first_name': record.Attendance.first_name,
-        'last_name': record.Attendance.last_name,
-        'organization': record.Attendance.organization,
-        'check_in_time': convert_utc_to_edt(record.Attendance.check_in_time).isoformat() if record.Attendance.check_in_time else 'Not Checked In',
-        'check_out_time': convert_utc_to_edt(record.Attendance.check_out_time).isoformat() if record.Attendance.check_out_time else 'Not Checked Out',
-        'lecture_name': record.name
-    } for record in records])
-
-
 def preprocess_image(file_stream):
     file_stream.seek(0)
     file_bytes = np.asarray(bytearray(file_stream.read()), dtype=np.uint8)
@@ -169,6 +150,25 @@ def parse_vcard(vcard_string):
         return contact_info
     except Exception as e:
         return {'error': str(e)}
+
+
+@app.route('/history', methods=['GET'])
+def history():
+    lecture_id = request.args.get('lecture_id', None)
+    query = db.session.query(Attendance, Lecture.name).join(
+        Lecture, Attendance.lecture_id == Lecture.id)
+    if lecture_id:
+        query = query.filter(Attendance.lecture_id == lecture_id)
+    records = query.order_by(Attendance.check_in_time.desc()).all()
+
+    return jsonify([{
+        'first_name': record.Attendance.first_name,
+        'last_name': record.Attendance.last_name,
+        'organization': record.Attendance.organization,
+        'check_in_time': convert_utc_to_edt(record.Attendance.check_in_time).isoformat() if record.Attendance.check_in_time else 'Not Checked In',
+        'check_out_time': convert_utc_to_edt(record.Attendance.check_out_time).isoformat() if record.Attendance.check_out_time else 'Not Checked Out',
+        'lecture_name': record.name
+    } for record in records])
 
 
 if __name__ == '__main__':

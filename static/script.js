@@ -51,19 +51,25 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (data.length) {
 					historyHTML += data
 						.map(
-							(lecture) => `
-                                <div class="lecture-card-container" id="lecture-container-${lecture.id}">
-                                    <div class="delete-icon" onclick="deleteLecture(${lecture.id})">
-                                        <img src="/static/delete.png" alt="Delete">
-                                    </div>
-                                    <div class="lecture-card" id="lecture-card-${lecture.id}">
-                                        <div class="lecture-info">Name: ${lecture.name}</div>
-                                        <div class="lecture-info">Lecturer: ${lecture.lecturer}</div>
-                                        <div class="lecture-info">Start Time: ${lecture.start_time}</div>
-                                        <div class="lecture-info">End Time: ${lecture.end_time}</div>
-                                    </div>
-                                </div>
-        `
+							(record) => `
+                        <div class="history-card">
+                            <div class="history-info">Name: ${
+															record.first_name
+														} ${record.last_name}</div>
+                            <div class="history-info">Organization: ${
+															record.organization
+														}</div>
+                            <div class="history-info">Check-in: ${
+															record.check_in_time || 'Not Checked In'
+														}</div>
+                            <div class="history-info">Check-out: ${
+															record.check_out_time || 'Not Checked Out'
+														}</div>
+                            <div class="history-info">Lecture: ${
+															record.lecture_name
+														}</div>
+                        </div>
+                    `
 						)
 						.join('');
 				} else {

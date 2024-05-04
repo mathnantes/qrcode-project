@@ -119,21 +119,12 @@ def preprocess_image(file_stream):
     file_bytes = np.asarray(bytearray(file_stream.read()), dtype=np.uint8)
     img = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
 
-    # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    contrast = cv2.convertScaleAbs(gray, alpha=1.5, beta=0)
+    _, binary = cv2.threshold(
+        contrast, 128, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
 
-    # Enhance contrast using histogram equalization
-    equalized = cv2.equalizeHist(gray)
-
-    # Apply adaptive thresholding for better foreground-background separation
-    thresh = cv2.adaptiveThreshold(equalized, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                                   cv2.THRESH_BINARY, 11, 2)
-
-    # Optional: Morphological operations to clean up small noises or holes
-    kernel = np.ones((5, 5), np.uint8)
-    opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel)
-
-    final_image = Image.fromarray(opening)
+    final_image = Image.fromarray(binary)
     return final_image, final_image
 
 

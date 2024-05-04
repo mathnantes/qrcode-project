@@ -201,6 +201,14 @@ document.addEventListener('DOMContentLoaded', function () {
 		.addEventListener('change', function (event) {
 			if (event.target.files.length > 0) {
 				selectedFile = event.target.files[0];
+				const reader = new FileReader();
+
+				reader.onload = function (e) {
+					// Set the processed/preprocessed image to be displayed
+					document.getElementById('triggerCamera').src = e.target.result;
+				};
+
+				reader.readAsDataURL(selectedFile); // Reads the file as a Data URL and triggers onload
 			}
 		});
 
@@ -255,6 +263,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					console.error('Error:', error);
 					clearForm();
 				});
+			document.getElementById('triggerCamera').src = '/static/qr-border.png';
 		});
 
 	// Function to toggle lecture form visibility

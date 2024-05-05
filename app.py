@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from pyzbar.pyzbar import decode
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 import vobject
 from PIL import Image
 import cv2
@@ -196,6 +198,60 @@ def delete_history(history_id):
     db.session.delete(attendance)
     db.session.commit()
     return jsonify({'message': 'Attendance deleted successfully'})
+
+
+@app.route('/export-history', methods=['GET'])
+def export_history():
+    lecture_id = request.args.get('lectureId')
+    buffer = io.BytesIO()
+
+    # Default name for the PDF file
+    filename = "All Lectures History"
+
+    # Query setup
+    query = Attendance.query.join(Lecture)
+    if lecture_id:
+        query = query.filter(Lecture.id == lecture_id)
+        lecture = Lecture.query.get(lecture_id)
+        if lecture:
+            # Set filename to lecture name if found
+            filename = f"{lecture.name} History"
+
+    records = query.order_by(Attendance.last_modified.desc()).all()
+
+    # Create PDF
+    p = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+    x = 50
+    y = height - 50
+    p.drawString(x, y, "Attendance History")
+    y -= 40
+
+    # Add the header
+    headers = ["Name", "Organization", "Check-in", "Check-out", "Lecture"]
+    p.drawString(x, y, ' | '.join(headers))
+    y -= 20
+
+    # Add the rows
+    for record in records:
+        line = [
+            f"{record.first_name} {record.last_name}",
+            f"{record.organization}",
+            f"{record.check_in_time.strftime('%Y-%m-%d %H:%M') if record.check_in_time else ''}",
+            f"{record.check_out_time.strftime('%Y-%m-%d %H:%M') if record.check_out_time else ''}",
+            f"{record.lecture.name}"
+        ]
+        p.drawString(x, y, ' | '.join(line))
+        y -= 20
+        if y < 50:
+            p.showPage()
+            y = height - 50
+
+    p.save()
+
+    # Move to the beginning of the StringIO buffer
+    buffer.seek(0)
+    return Response(buffer.getvalue(), mimetype='application/pdf', headers={'Content-Disposition': f'attachment;filename="{filename}.pdf"'})
 
 
 if __name__ == '__main__':

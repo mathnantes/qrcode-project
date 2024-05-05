@@ -72,6 +72,10 @@ document.addEventListener('DOMContentLoaded', function () {
 					filterHTML += `<option value="${lecture.id}">${lecture.name}</option>`;
 				});
 				filterHTML += '</select>';
+
+				filterHTML +=
+					'<button id="export-pdf" class="export-btn">Export to PDF</button>';
+
 				contentArea.innerHTML =
 					'<div class="filter-container">' +
 					filterHTML +
@@ -81,6 +85,14 @@ document.addEventListener('DOMContentLoaded', function () {
 					.getElementById('history-filter')
 					.addEventListener('change', function () {
 						loadFilteredHistory(this.value);
+					});
+
+				document
+					.getElementById('export-pdf')
+					.addEventListener('click', function () {
+						const lectureId =
+							document.getElementById('history-filter').value || '';
+						window.open(`/export-history?lectureId=${lectureId}`, '_blank');
 					});
 
 				loadFilteredHistory(); // Load all history initially

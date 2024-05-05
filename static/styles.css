@@ -369,6 +369,29 @@ label {
 	background-color: #ececec;
 }
 
+.export-btn {
+	display: inline-block; /* Ensures the button flows in line but can be sized */
+	padding: 10px 20px; /* Add padding for aesthetic spacing */
+	font-size: 16px; /* Set font size for readability */
+	color: white; /* Text color */
+	background-color: #343434; /* Button color */
+	border: none; /* Remove any default border */
+	border-radius: 5px; /* Optional: round the corners */
+	cursor: pointer; /* Change mouse cursor to pointer to indicate it's clickable */
+	text-align: center; /* Center the text inside the button */
+	white-space: nowrap; /* Prevents the text from wrapping to a new line */
+	overflow: hidden; /* Keep all text inside the button's bounding box */
+	text-overflow: ellipsis; /* Add an ellipsis if the text overflows */
+	vertical-align: middle; /* Aligns the button in line with adjacent text or buttons */
+	transition: background-color 0.3s; /* Smooth transition for hover effects */
+	width: 100%;
+	margin-left: 40px;
+}
+
+.export-btn:hover {
+	background-color: #686868; /* Darker shade on hover for visual feedback */
+}
+
 /* LECTURES PAGE */
 .lectures-page {
 	position: relative;

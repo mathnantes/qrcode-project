@@ -514,7 +514,6 @@ function updateLastEntry() {
 
 document.addEventListener('DOMContentLoaded', function () {
 	updateLastEntry(); // Update last entry when the page is loaded
-	updateContentArea('home-btn', () => {}); // Load initial home content
 });
 
 function initializeHomePage() {

@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			.then((lectures) => {
 				const dropdown = document.getElementById('lecture-dropdown');
 				dropdown.innerHTML =
-					'<option disabled selected>Select Lecture</option>';
+					'<option disabled selected>Selecionar Palestra</option>';
 				lectures.forEach((lecture) => {
 					const option = document.createElement('option');
 					option.value = lecture.id;
@@ -67,14 +67,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			.then((response) => response.json())
 			.then((lectures) => {
 				let filterHTML = '<select id="history-filter">';
-				filterHTML += '<option value="">All Lectures</option>';
+				filterHTML += '<option value="">Todas</option>';
 				lectures.forEach((lecture) => {
 					filterHTML += `<option value="${lecture.id}">${lecture.name}</option>`;
 				});
 				filterHTML += '</select>';
 
 				filterHTML +=
-					'<button id="export-pdf" class="export-btn">Export to PDF</button>';
+					'<button id="export-pdf" class="export-btn">Exportar para PDF</button>';
 
 				contentArea.innerHTML =
 					'<div class="filter-container">' +
@@ -115,10 +115,10 @@ document.addEventListener('DOMContentLoaded', function () {
 													record.id
 												}">
                             <div class="delete-icon"></div>
-                            <div class="history-info">Name: ${
+                            <div class="history-info">Nome: ${
 															record.first_name
 														} ${record.last_name}</div>
-                            <div class="history-info">Organization: ${
+                            <div class="history-info">CPF: ${
 															record.organization
 														}</div>
                             <div class="history-info">Check-in: ${
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="history-info">Check-out: ${
 															record.check_out_time ? record.check_out_time : ''
 														}</div>
-                            <div class="history-info">Lecture: ${
+                            <div class="history-info">Palestra: ${
 															record.lecture_name
 														}</div>
                         </div>
@@ -156,10 +156,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="lecture-card" id="lecture-card-${lecture.id}">
                                 <div class="delete-icon"></div>
                                 <div class="lecture-card-content">
-                                    <div class="lecture-info">Name: ${lecture.name}</div>
-                                    <div class="lecture-info">Lecturer: ${lecture.lecturer}</div>
-                                    <div class="lecture-info">Start Time: ${lecture.start_time}</div>
-                                    <div class="lecture-info">End Time: ${lecture.end_time}</div>
+                                    <div class="lecture-info">Nome: ${lecture.name}</div>
+                                    <div class="lecture-info">Palestrante: ${lecture.lecturer}</div>
+                                    <div class="lecture-info">Início: ${lecture.start_time}</div>
+                                    <div class="lecture-info">Fim: ${lecture.end_time}</div>
                                 </div>
                             </div>
                         `
@@ -167,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						.join('');
 				} else {
 					lecturesHTML +=
-						'<div class="no-lectures"><div class="no-lectures-text">No lectures available.</div></div>';
+						'<div class="no-lectures"><div class="no-lectures-text">Nenhuma palestra disponível.</div></div>';
 				}
 				lecturesHTML += '</div>';
 				contentArea.innerHTML = lecturesHTML;
@@ -181,28 +181,28 @@ document.addEventListener('DOMContentLoaded', function () {
 	function appendAddLectureButton() {
 		let addLectureHTML = `
         <div class="add-lecture-btn" style="position: fixed; top: 23%; left: 50%; transform: translateX(-50%);">
-            <button class="add-lecture-btn" onclick="toggleLectureForm()">Add Lectures</button>
+            <button class="add-lecture-btn" onclick="toggleLectureForm()">Adicionar Palestra</button>
         </div>
         <form id="lecture-form" class="lecture-form" style="display:none;">
             <button type="button" class="close-btn" onclick="toggleLectureForm()">&#10005;</button>
-            <h1>Register New Lecture</h1>
+            <h1>Registrar nova Palestra</h1>
             <div class="input-group">
-                <label for="lecture-name">Name:</label>
+                <label for="lecture-name">Nome:</label>
                 <input type="text" id="lecture-name" class="form-input" placeholder="Enter lecture name" required>
             </div>
             <div class="input-group">
-                <label for="lecturer-name">Lecturer:</label>
+                <label for="lecturer-name">Palestrante:</label>
                 <input type="text" id="lecturer-name" class="form-input" placeholder="Enter lecturer's name" required>
             </div>
             <div class="input-group">
-                <label for="start-time">Start Time:</label>
+                <label for="start-time">Início:</label>
                 <input type="datetime-local" id="start-time" class="form-input" required>
             </div>
             <div class="input-group">
-                <label for="end-time">End Time:</label>
+                <label for="end-time">Fim:</label>
                 <input type="datetime-local" id="end-time" class="form-input" required>
             </div>
-            <button type="submit" class="submit-btn">Register Lecture</button>
+            <button type="submit" class="submit-btn">Registrar Palestra</button>
         </form>
     `;
 		document
@@ -285,15 +285,15 @@ document.addEventListener('DOMContentLoaded', function () {
 		.addEventListener('click', function (event) {
 			event.preventDefault();
 			if (!selectedFile) {
-				alert('Please select an image to scan.');
+				alert('Escaneie um QR Code.');
 				return;
 			}
 			if (!document.querySelector('input[name="attendance"]:checked')) {
-				alert('Please select either check-in or check-out.');
+				alert('Selecione check-in ou check-out.');
 				return;
 			}
 			if (document.getElementById('lecture-dropdown').selectedIndex == 0) {
-				alert('Please select a lecture.');
+				alert('Selecione uma palestra.');
 				return;
 			}
 			const formData = new FormData();
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						alert(data.error);
 					} else {
 						console.log('QR Code Data:', data.decoded_data);
-						alert('Attendance recorded successfully!');
+						alert('Registrado com sucesso!');
 						clearForm(); // Clear form after submission
 						updateLastEntry(); // Update the last entry display immediately after recording the attendance
 					}
@@ -439,7 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function confirmDelete(lectureId, card) {
-		if (confirm('Are you sure you want to delete this lecture?')) {
+		if (confirm('Tem certeza que quer deletar esta palestra?')) {
 			deleteLecture(lectureId, card);
 		} else {
 			resetCardPosition(card); // Reset card position if user cancels deletion
@@ -447,7 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function confirmHistoryDelete(historyId, card) {
-		if (confirm('Are you sure you want to delete this history?')) {
+		if (confirm('Tem certeza que quer deletar este registro?')) {
 			deleteHistory(historyId, card);
 		} else {
 			resetCardPosition(card); // Reset card position if user cancels deletion
@@ -562,7 +562,7 @@ function initializeSubmitFunctionality() {
 					alert(data.error);
 				} else {
 					console.log('QR Code Data:', data.decoded_data);
-					alert('Attendance recorded successfully!');
+					alert('Registrado com sucesso!');
 					document.getElementById('triggerCamera').src =
 						'/static/qr-border.png'; // Reset the camera icon
 					clearForm(); // Clear form after submission
@@ -588,7 +588,7 @@ function updateLastEntry() {
                         <div class="history-info">Name: ${data.first_name} ${
 					data.last_name
 				}</div>
-                        <div class="history-info">Organization: ${
+                        <div class="history-info">CPF: ${
 													data.organization
 												}</div>
                         <div class="history-info">Check-in: ${
@@ -604,7 +604,7 @@ function updateLastEntry() {
                 `;
 			} else {
 				lastEntryDiv.innerHTML =
-					'<div class="no-history-text">No entries found.</div>';
+					'<div class="no-history-text">Nenhum registro encontrado.</div>';
 			}
 		})
 		.catch((error) => {

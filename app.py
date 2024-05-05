@@ -66,7 +66,7 @@ def register_lecture():
     )
     db.session.add(new_lecture)
     db.session.commit()
-    return jsonify({'message': 'Lecture registered successfully', 'id': new_lecture.id})
+    return jsonify({'message': 'Palestra registrada com sucesso', 'id': new_lecture.id})
 
 
 @app.route('/delete-lecture/<int:lecture_id>', methods=['POST'])
@@ -74,7 +74,7 @@ def delete_lecture(lecture_id):
     lecture = Lecture.query.get_or_404(lecture_id)
     db.session.delete(lecture)
     db.session.commit()
-    return jsonify({'message': 'Lecture deleted successfully'})
+    return jsonify({'message': 'Palestra deletedada com sucesso'})
 
 
 @app.route('/scan', methods=['POST'])
@@ -120,7 +120,7 @@ def scan_qr():
 
         db.session.commit()
         return jsonify({'image': img_str, 'decoded_data': contact_info})
-    return jsonify({'error': 'No QR code detected'}), 400
+    return jsonify({'error': 'Nenhum QR Code detectado!'}), 400
 
 
 def preprocess_image(file_stream):
@@ -201,7 +201,7 @@ def delete_history(history_id):
     attendance = Attendance.query.get_or_404(history_id)
     db.session.delete(attendance)
     db.session.commit()
-    return jsonify({'message': 'Attendance deleted successfully'})
+    return jsonify({'message': 'Registro deletado com sucesso'})
 
 
 @app.route('/export-history', methods=['GET'])
@@ -224,13 +224,13 @@ def export_history():
     query = Attendance.query.join(Lecture)
     if lecture_id:
         query = query.filter(Lecture.id == lecture_id)
-        lecture = Lecture.query.get(lecture_id)
+        lecture = Lecture.session.get(lecture_id)
         filename = lecture.name if lecture else filename  # Ensure lecture is found
 
     records = query.order_by(Attendance.last_modified.desc()).all()
 
     # Prepare data for the table
-    data = [['Name', 'Organization', 'Check-in', 'Check-out', 'Lecture']]
+    data = [['Nome', 'CPF', 'Check-in', 'Check-out', 'Palestra']]
     for record in records:
         data.append([
             f"{record.first_name} {record.last_name}",

@@ -55,11 +55,6 @@ body {
 	overflow-y: hidden; /* Make middle section scrollable */
 }
 
-.lectures-page,
-.history-page {
-	overflow-y: auto; /* These sections can still scroll internally */
-}
-
 .fade-out {
 	animation: fadeOut 0.4s forwards;
 }
@@ -299,6 +294,7 @@ label {
 	width: 100%;
 	height: 65vh;
 	overflow-y: auto; /* Scroll only within the history page */
+	overflow-x: hidden;
 }
 
 .history-card {
@@ -310,6 +306,17 @@ label {
 	background-color: #f9f9f9;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
+	transition: transform 1s ease-out;
+	position: relative;
+	will-change: transform;
+}
+
+.history-card-content {
+	position: relative;
+	width: 100%;
+	z-index: 2; /* Ensure the content is above the delete icon */
+	background: transparent;
+	padding: 10px;
 }
 
 .history-info {

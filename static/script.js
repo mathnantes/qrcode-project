@@ -54,7 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
 					historyHTML += data
 						.map(
 							(record) => `
-                        <div class="history-card">
+                            <div class="history-card" id="history-card-${
+															record.id
+														}">
+                            <div class="delete-icon"></div>
                             <div class="history-info">Name: ${
 															record.first_name
 														} ${record.last_name}</div>
@@ -80,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 				historyHTML += '</div>';
 				contentArea.innerHTML = historyHTML;
+				addHistorySwipeListeners();
 				callback();
 			})
 			.catch((error) => console.error('Error loading history:', error));
@@ -330,6 +334,47 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	}
 
+	function addHistorySwipeListeners() {
+		const historyCards = document.querySelectorAll('.history-card');
+
+		historyCards.forEach((card) => {
+			let startX;
+
+			card.addEventListener('touchstart', (e) => {
+				startX = e.changedTouches[0].clientX;
+				card.style.transition = 'none'; // Remove any transition to allow for smooth movement
+				card.querySelector('.delete-icon').style.transition = 'none';
+			});
+
+			card.addEventListener('touchmove', (e) => {
+				let currentX = e.changedTouches[0].clientX;
+				let deltaX = currentX - startX;
+
+				if (deltaX < 0 && Math.abs(deltaX) < 150) {
+					// Only allow swiping left and limit distance
+					card.style.transform = `translateX(${deltaX}px)`;
+					card.querySelector('.delete-icon').style.opacity = Math.min(
+						1,
+						Math.abs(deltaX) / 150
+					);
+				}
+			});
+
+			card.addEventListener('touchend', (e) => {
+				const endX = e.changedTouches[0].clientX;
+				const threshold = 100; // Adjust the threshold for detection
+				let deltaX = startX - endX;
+				let historyId = card.id.split('-')[2]; // Assuming ID format is 'history-card-{id}'
+
+				if (deltaX > threshold) {
+					confirmHistoryDelete(historyId, card);
+				} else {
+					resetCardPosition(card);
+				}
+			});
+		});
+	}
+
 	function resetCardPosition(card) {
 		card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
 		card.querySelector('.delete-icon').style.transition =
@@ -341,6 +386,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	function confirmDelete(lectureId, card) {
 		if (confirm('Are you sure you want to delete this lecture?')) {
 			deleteLecture(lectureId, card);
+		} else {
+			resetCardPosition(card); // Reset card position if user cancels deletion
+		}
+	}
+
+	function confirmHistoryDelete(historyId, card) {
+		if (confirm('Are you sure you want to delete this history?')) {
+			deleteHistory(historyId, card);
 		} else {
 			resetCardPosition(card); // Reset card position if user cancels deletion
 		}
@@ -365,6 +418,27 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 			})
 			.catch((error) => console.error('Error deleting lecture:', error));
+	}
+
+	function deleteHistory(historyId, card) {
+		fetch(`/delete-history/${historyId}`, {
+			method: 'POST',
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				alert(data.message);
+				if (card) {
+					// Animate card to slide out and fade out
+					card.style.transition =
+						'transform 0.5s ease-in-out, opacity 0.5s ease-in-out';
+					card.style.transform = 'translateX(-100%)'; // Move card out of view to the left
+					card.style.opacity = '0'; // Fade out the card
+					setTimeout(() => {
+						card.remove(); // Remove from the DOM after animation completes
+					}, 500); // Match the timeout with the duration of the transition
+				}
+			})
+			.catch((error) => console.error('Error deleting history:', error));
 	}
 });
 
@@ -453,7 +527,7 @@ function displayLastEntry() {
 			if (Object.keys(data).length !== 0) {
 				const lastEntryDiv = document.querySelector('.last-entry');
 				lastEntryDiv.innerHTML = `
-                <div class="history-card">
+                <div>
                     <div class="history-info">Name: ${data.first_name} ${
 					data.last_name
 				}</div>
@@ -526,4 +600,9 @@ function clearForm() {
 	document.getElementById('cameraInput').value = '';
 	document.getElementById('lecture-dropdown').selectedIndex = 0;
 	selectedFile = null;
+
+	// Reset the image source to the qr-border.png
+	const imgElement = document.getElementById('triggerCamera');
+	imgElement.src = '/static/qr-border.png'; // Make sure the path is correct
+	imgElement.classList.remove('scanned-img'); // If you add a class that changes the display on scan
 }

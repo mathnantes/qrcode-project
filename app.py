@@ -150,11 +150,13 @@ def parse_vcard(vcard_string):
 @app.route('/history', methods=['GET'])
 def get_history():
     records = Attendance.query.join(Lecture).add_columns(
+        Attendance.id,
         Attendance.first_name, Attendance.last_name,
         Attendance.organization, Attendance.check_in_time,
         Attendance.check_out_time, Lecture.name.label('lecture_name')
     ).all()
     return jsonify([{
+        'id': record.id,
         'first_name': record.first_name,
         'last_name': record.last_name,
         'organization': record.organization,
@@ -181,6 +183,14 @@ def get_latest_history():
             'lecture_name': latest_record.lecture_name
         })
     return jsonify({}), 404  # Return empty if no records found
+
+
+@app.route('/delete-history/<int:history_id>', methods=['POST'])
+def delete_history(history_id):
+    attendance = Attendance.query.get_or_404(history_id)
+    db.session.delete(attendance)
+    db.session.commit()
+    return jsonify({'message': 'Attendance deleted successfully'})
 
 
 if __name__ == '__main__':

@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				let historyHTML = '<div class="history-page">';
 				if (data.length) {
 					historyHTML += data
+						.reverse()
 						.map(
 							(record) => `
                             <div class="history-card" id="history-card-${
@@ -594,6 +595,16 @@ function initializeHomePage() {
 	initializeScanFunctionality();
 	initializeSubmitFunctionality();
 	displayLastEntry();
+	setLastEntryUpdateTrigger();
+}
+
+function setLastEntryUpdateTrigger() {
+	const submitButton = document.querySelector('.submit-btn');
+	if (submitButton) {
+		submitButton.addEventListener('click', function () {
+			updateLastEntry(); // Update last entry on submit
+		});
+	}
 }
 
 function clearForm() {

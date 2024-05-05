@@ -125,6 +125,12 @@ body {
 	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2), 0 12px 24px rgba(0, 0, 0, 0.28);
 }
 
+.scanned-img {
+	width: 180px; /* Set this to fit your design */
+	height: auto; /* Maintain aspect ratio */
+	object-fit: contain; /* Ensures the image is resized properly within the element */
+}
+
 /* OPTIONS */
 .attendance-options {
 	display: flex;
@@ -150,6 +156,7 @@ label {
 	display: flex;
 	align-items: center;
 	margin: 0 15px;
+	margin-top: -25px;
 	font-size: 18px;
 	color: #343434;
 	position: relative;
@@ -203,7 +210,7 @@ label {
 }
 
 .lecture-dropdown {
-	margin-top: 20px;
+	margin-top: 10px;
 	padding: 8px 12px;
 	border-radius: 5px;
 	width: 80%;
@@ -252,18 +259,42 @@ label {
 
 /* LAST ENTRY */
 .last-entry {
-	display: block;
-	width: 90%;
-	height: 80px;
-	padding: 10px;
-	background-color: rgb(217, 219, 225);
+	width: 90%; /* Adjust width as needed */
+	max-width: 600px; /* Set a max-width for larger screens */
+	margin: 20px auto; /* Center the div */
+	padding: 15px;
+	background-color: #f0f0f0; /* Light grey background */
 	border-radius: 10px;
-	text-align: center;
-	justify-content: center;
-	margin-top: 45px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+	font-size: 14px;
+	line-height: 1.5;
+	display: flex;
+	flex-direction: column; /* Organize content in a column */
+	justify-content: space-around;
+	max-height: 90px; /* Limit the height */
+	margin-top: 50px;
+	color: #333;
+	border: 2px solid blue;
+}
+
+.last-entry p {
+	margin: -2px 0; /* Small margin between paragraphs */
+	color: #333; /* Dark grey text color for readability */
 }
 
 /* HISTORY PAGE */
+.history-page .history-card {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+	margin: 10px;
+	padding: 20px;
+	background-color: #f9f9f9;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	border-radius: 10px;
+	border: 2px solid red;
+}
+
 .history-page {
 	flex-direction: column;
 	align-items: center;
@@ -372,7 +403,7 @@ label {
 	background-color: #f9f9f9;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
-	transition: transform 0.3s ease-out;
+	transition: transform 1s ease-out;
 	position: relative;
 	will-change: transform;
 }

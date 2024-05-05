@@ -164,6 +164,25 @@ def get_history():
     } for record in records])
 
 
+@app.route('/latest-history', methods=['GET'])
+def get_latest_history():
+    latest_record = Attendance.query.join(Lecture).add_columns(
+        Attendance.first_name, Attendance.last_name,
+        Attendance.organization, Attendance.check_in_time,
+        Attendance.check_out_time, Lecture.name.label('lecture_name')
+    ).order_by(Attendance.id.desc()).first()  # Get the latest entry
+    if latest_record:
+        return jsonify({
+            'first_name': latest_record.first_name,
+            'last_name': latest_record.last_name,
+            'organization': latest_record.organization,
+            'check_in_time': latest_record.check_in_time.strftime("%Y-%m-%d %H:%M") if latest_record.check_in_time else None,
+            'check_out_time': latest_record.check_out_time.strftime("%Y-%m-%d %H:%M") if latest_record.check_out_time else None,
+            'lecture_name': latest_record.lecture_name
+        })
+    return jsonify({}), 404  # Return empty if no records found
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()

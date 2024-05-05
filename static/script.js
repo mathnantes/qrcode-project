@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', function () {
 		switch (buttonId) {
 			case 'home-btn':
 				contentArea.innerHTML = defaultContentHTML;
+				initializeHomePage(); // Initializes all home page functionalities
 				populateLectureDropdown();
+				updateLastEntry();
 				callback();
 				break;
 			case 'history-btn':
@@ -210,20 +212,14 @@ document.addEventListener('DOMContentLoaded', function () {
 				const reader = new FileReader();
 
 				reader.onload = function (e) {
-					// Set the processed/preprocessed image to be displayed
-					document.getElementById('triggerCamera').src = e.target.result;
+					const imgElement = document.getElementById('triggerCamera');
+					imgElement.src = e.target.result;
+					imgElement.classList.add('scanned-img'); // Add the class to adjust size
 				};
 
 				reader.readAsDataURL(selectedFile); // Reads the file as a Data URL and triggers onload
 			}
 		});
-
-	function clearForm() {
-		document.getElementById('cameraInput').value = '';
-		document.querySelector('input[name="attendance"]:checked').checked = false;
-		document.getElementById('lecture-dropdown').selectedIndex = 0;
-		selectedFile = null;
-	}
 
 	document
 		.querySelector('.submit-btn')
@@ -262,14 +258,18 @@ document.addEventListener('DOMContentLoaded', function () {
 					} else {
 						console.log('QR Code Data:', data.decoded_data);
 						alert('Attendance recorded successfully!');
-						clearForm();
+						clearForm(); // Clear form after submission
+						updateLastEntry(); // Update the last entry display
 					}
 				})
 				.catch((error) => {
 					console.error('Error:', error);
-					clearForm();
+					clearForm(); // Ensure form is cleared even on error
 				});
-			document.getElementById('triggerCamera').src = '/static/qr-border.png';
+			// Reset the image and remove class
+			const imgElement = document.getElementById('triggerCamera');
+			imgElement.src = '/static/qr-border.png';
+			imgElement.classList.remove('scanned-img'); // Remove the class to revert to original size
 		});
 
 	// Function to toggle lecture form visibility
@@ -296,71 +296,230 @@ document.addEventListener('DOMContentLoaded', function () {
 	function addSwipeListeners() {
 		const lectureCards = document.querySelectorAll('.lecture-card');
 		lectureCards.forEach((card) => {
-			let startX, currentX;
+			let startX;
 
 			card.addEventListener('touchstart', (e) => {
 				startX = e.changedTouches[0].clientX;
-				card.style.transition = ''; // Disable transition for smoother dragging
+				card.style.transition = 'none'; // Remove any transition to allow for smooth movement
+				card.querySelector('.delete-icon').style.transition = 'none';
 			});
 
 			card.addEventListener('touchmove', (e) => {
-				currentX = e.changedTouches[0].clientX;
-				const deltaX = currentX - startX;
+				let currentX = e.changedTouches[0].clientX;
+				let deltaX = currentX - startX;
 
-				// Limit the swipe distance to a maximum of 150 pixels
-				if (deltaX < 0 && Math.abs(deltaX) <= 150) {
+				if (deltaX < 0 && Math.abs(deltaX) < 150) {
+					// Only allow swiping left and limit distance
 					card.style.transform = `translateX(${deltaX}px)`;
 					card.querySelector('.delete-icon').style.opacity = Math.min(
-						Math.abs(deltaX) / 150,
-						0.5
+						1,
+						Math.abs(deltaX) / 150
 					);
 				}
 			});
 
 			card.addEventListener('touchend', (e) => {
 				const endX = e.changedTouches[0].clientX;
-				const threshold = 150;
-				if (startX > endX + threshold) {
-					// Commit to delete if swiped beyond threshold
-					deleteLecture(card.id.split('-')[2]);
+				const threshold = 100; // Adjust the threshold for detection
+				let deltaX = startX - endX;
+				let lectureId = card.id.split('-')[2]; // Assuming ID format is 'lecture-card-{id}'
+
+				if (deltaX > threshold) {
+					confirmDelete(lectureId, card);
 				} else {
-					// Reset if not swiped far enough or pulled back
-					card.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-					card.style.transform = 'translateX(0)';
-					card.querySelector('.delete-icon').style.opacity = 0;
+					resetCardPosition(card);
 				}
 			});
 		});
 	}
-});
 
-function deleteLecture(lectureId) {
-	if (confirm('Are you sure you want to delete this lecture?')) {
-		// User confirms deletion
+	function resetCardPosition(card) {
+		card.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
+		card.querySelector('.delete-icon').style.transition =
+			'opacity 0.3s ease-out';
+		card.style.transform = 'translateX(0)';
+		card.querySelector('.delete-icon').style.opacity = 0;
+	}
+
+	function confirmDelete(lectureId, card) {
+		if (confirm('Are you sure you want to delete this lecture?')) {
+			deleteLecture(lectureId, card);
+		} else {
+			resetCardPosition(card); // Reset card position if user cancels deletion
+		}
+	}
+
+	function deleteLecture(lectureId, card) {
 		fetch(`/delete-lecture/${lectureId}`, {
 			method: 'POST',
 		})
 			.then((response) => response.json())
 			.then((data) => {
 				alert(data.message);
-				const lectureCard = document.getElementById(
-					`lecture-card-${lectureId}`
-				);
-				if (lectureCard) {
-					lectureCard.style.transition = 'transform 0.3s ease-in-out';
-					lectureCard.style.transform = 'translateX(-100%)'; // Animate swipe out
-					setTimeout(() => lectureCard.remove(), 300); // Wait for animation
+				if (card) {
+					// Animate card to slide out and fade out
+					card.style.transition =
+						'transform 0.5s ease-in-out, opacity 0.5s ease-in-out';
+					card.style.transform = 'translateX(-100%)'; // Move card out of view to the left
+					card.style.opacity = '0'; // Fade out the card
+					setTimeout(() => {
+						card.remove(); // Remove from the DOM after animation completes
+					}, 500); // Match the timeout with the duration of the transition
 				}
 			})
 			.catch((error) => console.error('Error deleting lecture:', error));
-	} else {
-		// User cancels deletion
-		const lectureCard = document.getElementById(`lecture-card-${lectureId}`);
-		if (lectureCard) {
-			// Reset card position
-			lectureCard.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-			lectureCard.style.transform = 'translateX(0)';
-			lectureCard.parentNode.querySelector('.delete-icon').style.opacity = 0;
-		}
 	}
+});
+
+function initializeScanFunctionality() {
+	const cameraInput = document.getElementById('cameraInput');
+	const triggerCamera = document.getElementById('triggerCamera');
+
+	triggerCamera.addEventListener('click', function (event) {
+		event.preventDefault();
+		cameraInput.click(); // Trigger file input
+	});
+
+	cameraInput.addEventListener('change', function (event) {
+		if (event.target.files.length > 0) {
+			selectedFile = event.target.files[0];
+			const reader = new FileReader();
+
+			reader.onload = function (e) {
+				const imgElement = document.getElementById('triggerCamera');
+				imgElement.src = e.target.result;
+				imgElement.classList.add('scanned-img'); // Adjust the image size
+			};
+
+			reader.readAsDataURL(selectedFile); // Convert file to base64 string
+		}
+	});
+}
+
+function initializeSubmitFunctionality() {
+	const submitButton = document.querySelector('.submit-btn');
+
+	submitButton.addEventListener('click', function (event) {
+		event.preventDefault();
+
+		if (!selectedFile) {
+			alert('Please select an image to scan.');
+			return;
+		}
+
+		const attendanceRadio = document.querySelector(
+			'input[name="attendance"]:checked'
+		);
+		if (!attendanceRadio) {
+			alert('Please select either check-in or check-out.');
+			return;
+		}
+
+		const lectureDropdown = document.getElementById('lecture-dropdown');
+		if (lectureDropdown.selectedIndex === 0) {
+			alert('Please select a lecture.');
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append('file', selectedFile);
+		formData.append('action', attendanceRadio.value);
+		formData.append('lecture_id', lectureDropdown.value);
+
+		fetch('/scan', {
+			method: 'POST',
+			body: formData,
+		})
+			.then((response) => response.json())
+			.then((data) => {
+				if (data.error) {
+					alert(data.error);
+				} else {
+					console.log('QR Code Data:', data.decoded_data);
+					alert('Attendance recorded successfully!');
+					document.getElementById('triggerCamera').src =
+						'/static/qr-border.png'; // Reset the camera icon
+					clearForm(); // Clear form after submission
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+				clearForm(); // Ensure form is cleared even on error
+			});
+	});
+}
+
+function displayLastEntry() {
+	fetch('/latest-history')
+		.then((response) => response.json())
+		.then((data) => {
+			if (Object.keys(data).length !== 0) {
+				const lastEntryDiv = document.querySelector('.last-entry');
+				lastEntryDiv.innerHTML = `
+                <div class="history-card">
+                    <div class="history-info">Name: ${data.first_name} ${
+					data.last_name
+				}</div>
+                    <div class="history-info">Organization: ${
+											data.organization
+										}</div>
+                    <div class="history-info">Check-in: ${
+											data.check_in_time || 'Not Checked In'
+										}</div>
+                    <div class="history-info">Check-out: ${
+											data.check_out_time || 'Not Checked Out'
+										}</div>
+                    <div class="history-info">Lecture: ${
+											data.lecture_name
+										}</div>
+                </div>
+            `;
+			} else {
+				document.querySelector('.last-entry').innerHTML =
+					'<div class="no-history-text">No entries found.</div>';
+			}
+		})
+		.catch((error) => {
+			console.error('Error fetching the latest history entry:', error);
+			document.querySelector('.last-entry').innerHTML =
+				'<div class="no-history-text">Error loading entry.</div>';
+		});
+}
+
+function updateLastEntry() {
+	fetch('/history')
+		.then((response) => response.json())
+		.then((data) => {
+			if (data.length > 0) {
+				const lastRecord = data[data.length - 1]; // Assuming the latest entry is at the end of the array
+				const lastEntryDiv = document.querySelector('.last-entry');
+				lastEntryDiv.innerHTML = `
+                <p>Name: ${lastRecord.first_name} ${lastRecord.last_name}</p>
+                <p>Organization: ${lastRecord.organization}</p>
+                <p>Check-in: ${lastRecord.check_in_time || 'Not Checked In'}</p>
+                <p>Check-out: ${
+									lastRecord.check_out_time || 'Not Checked Out'
+								}</p>
+                <p>Lecture: ${lastRecord.lecture_name}</p>
+            `;
+			}
+		})
+		.catch((error) => console.error('Failed to fetch last entry:', error));
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+	updateLastEntry(); // Update last entry when the page is loaded
+	updateContentArea('home-btn', () => {}); // Load initial home content
+});
+
+function initializeHomePage() {
+	initializeScanFunctionality();
+	initializeSubmitFunctionality();
+	displayLastEntry();
+}
+
+function clearForm() {
+	document.getElementById('cameraInput').value = '';
+	document.getElementById('lecture-dropdown').selectedIndex = 0;
+	selectedFile = null;
 }

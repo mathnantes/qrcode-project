@@ -180,8 +180,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	function appendAddLectureButton() {
 		let addLectureHTML = `
-        <div class="add-lecture-btn" style="position: fixed; bottom: 10%; left: 50%; transform: translateX(-50%);">
-            <img src="/static/add.png" alt="Add Lecture" style="width:50px; height:50px;" onclick="toggleLectureForm()">
+        <div class="add-lecture-btn" style="position: fixed; top: 23%; left: 50%; transform: translateX(-50%);">
+            <button class="add-lecture-btn" onclick="toggleLectureForm()">Add Lectures</button>
         </div>
         <form id="lecture-form" class="lecture-form" style="display:none;">
             <button type="button" class="close-btn" onclick="toggleLectureForm()">&#10005;</button>
@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Function to toggle lecture form visibility
 	window.toggleLectureForm = function () {
 		const form = document.querySelector('.lecture-form');
-		const addButton = document.querySelector('.add-lecture-btn img');
+		const addButton = document.querySelector('.add-lecture-btn');
 		if (form.style.display === 'none' || !form.style.display) {
 			form.style.display = 'block';
 			addButton.style.opacity = '0.5';

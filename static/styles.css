@@ -496,30 +496,22 @@ label {
 }
 
 .add-lecture-btn {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	background: none; /* Removing background color */
-	width: 50px; /* Adjusted size for image */
-	height: 50px; /* Adjusted size for image */
-	cursor: pointer;
-	margin: 20px auto; /* Center it horizontally for better layout */
-	margin-bottom: 48px;
-	position: absolute; /* Make position absolute to control exact placement */
-	top: 150px; /* Position it right below the top div */
-	left: 50%;
-	transform: translateX(-50%);
-	z-index: 10; /* Ensure it's above other content */
+	display: inline-block; /* Keeps the button in line but allows for sizing */
+	padding: 5px 10px; /* Padding for aesthetic spacing */
+	font-size: 16px; /* Font size for readability */
+	color: white; /* Text color */
+	background-color: #343434; /* Button background color */
+	border: none; /* Removes any default border */
+	border-radius: 5px; /* Rounded corners for modern look */
+	cursor: pointer; /* Cursor indicates the element is clickable */
+	text-align: center; /* Centers text inside the button */
+	transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+	width: auto; /* Auto width based on content */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Adds a subtle shadow for depth */
 }
 
-.add-lecture-btn img {
-	width: 100%; /* Full width of the button */
-	height: auto; /* Maintain aspect ratio */
-	transition: transform 0.3s; /* Smooth transform transition */
-}
-
-.add-lecture-btn:hover img {
-	transform: scale(1.1); /* Slight increase in size on hover */
+.add-lecture-btn:hover {
+	background-color: #505050; /* Darker shade on hover for visual feedback */
 }
 
 .close-btn {

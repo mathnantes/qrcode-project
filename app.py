@@ -152,19 +152,19 @@ def parse_vcard(vcard_string):
 
 @app.route('/history', methods=['GET'])
 def get_history():
-    records = Attendance.query.join(Lecture).add_columns(
-        Attendance.id,
-        Attendance.first_name, Attendance.last_name,
+    lecture_id = request.args.get('lectureId')
+    query = Attendance.query.join(Lecture).add_columns(
+        Attendance.id, Attendance.first_name, Attendance.last_name,
         Attendance.organization, Attendance.check_in_time,
         Attendance.check_out_time, Lecture.name.label('lecture_name'),
         Attendance.last_modified
-    ).order_by(Attendance.last_modified.desc()).all()
+    )
+    if lecture_id:
+        query = query.filter(Lecture.id == lecture_id)
+    records = query.order_by(Attendance.last_modified.desc()).all()
     return jsonify([{
-        'id': record.id,
-        'first_name': record.first_name,
-        'last_name': record.last_name,
-        'organization': record.organization,
-        'check_in_time': record.check_in_time.strftime("%Y-%m-%d %H:%M") if record.check_in_time else None,
+        'id': record.id, 'first_name': record.first_name, 'last_name': record.last_name,
+        'organization': record.organization, 'check_in_time': record.check_in_time.strftime("%Y-%m-%d %H:%M") if record.check_in_time else None,
         'check_out_time': record.check_out_time.strftime("%Y-%m-%d %H:%M") if record.check_out_time else None,
         'lecture_name': record.lecture_name
     } for record in records])

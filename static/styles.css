@@ -338,6 +338,37 @@ label {
 	color: #686868;
 }
 
+.filter-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+#history-filter {
+	padding: 8px 12px;
+	border-radius: 5px;
+	width: 100%;
+	max-width: 300px; /* Ensures the dropdown does not stretch too wide on larger screens */
+	border: 2px solid #bbb;
+	background-color: #fff;
+	color: #343434;
+	font-size: 16px;
+	transition: all 0.3s ease;
+	cursor: pointer;
+}
+
+#history-filter:hover,
+#history-filter:focus {
+	border-color: #999;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+#history-filter:active {
+	background-color: #ececec;
+}
+
 /* LECTURES PAGE */
 .lectures-page {
 	position: relative;

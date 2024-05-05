@@ -62,17 +62,46 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function fetchHistory(callback) {
-		fetch('/history')
+		// Fetch lectures for the dropdown to filter history by lecture
+		fetch('/lectures')
+			.then((response) => response.json())
+			.then((lectures) => {
+				let filterHTML = '<select id="history-filter">';
+				filterHTML += '<option value="">All Lectures</option>';
+				lectures.forEach((lecture) => {
+					filterHTML += `<option value="${lecture.id}">${lecture.name}</option>`;
+				});
+				filterHTML += '</select>';
+				contentArea.innerHTML =
+					'<div class="filter-container">' +
+					filterHTML +
+					'</div><div class="history-page"></div>';
+
+				document
+					.getElementById('history-filter')
+					.addEventListener('change', function () {
+						loadFilteredHistory(this.value);
+					});
+
+				loadFilteredHistory(); // Load all history initially
+				callback();
+			})
+			.catch((error) =>
+				console.error('Failed to load lectures for filter:', error)
+			);
+	}
+
+	function loadFilteredHistory(lectureId = '') {
+		fetch(`/history?lectureId=${lectureId}`)
 			.then((response) => response.json())
 			.then((data) => {
 				let historyHTML = '<div class="history-page">';
 				if (data.length) {
-					historyHTML += data
-						.map(
-							(record) => `
-                            <div class="history-card" id="history-card-${
-															record.id
-														}">
+					data.forEach((record) => {
+						historyHTML += `
+                        <div class="history-card" id="history-card-${
+													record.id
+												}">
                             <div class="delete-icon"></div>
                             <div class="history-info">Name: ${
 															record.first_name
@@ -90,17 +119,14 @@ document.addEventListener('DOMContentLoaded', function () {
 															record.lecture_name
 														}</div>
                         </div>
-                    `
-						)
-						.join('');
+                    `;
+					});
 				} else {
 					historyHTML +=
 						'<div class="no-history"><div class="no-history-text">No attendance records available.</div></div>';
 				}
 				historyHTML += '</div>';
-				contentArea.innerHTML = historyHTML;
-				addHistorySwipeListeners();
-				callback();
+				document.querySelector('.history-page').innerHTML = historyHTML;
 			})
 			.catch((error) => console.error('Error loading history:', error));
 	}

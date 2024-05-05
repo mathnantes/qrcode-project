@@ -28,6 +28,22 @@ document.addEventListener('DOMContentLoaded', function () {
 	// Call populateLectureDropdown on initial load
 	populateLectureDropdown();
 
+	function initializeHomePage() {
+		initializeScanFunctionality();
+		initializeSubmitFunctionality();
+		updateLastEntry(); // Ensure last entry is updated on home page setup
+		setLastEntryUpdateTrigger(); // Setup the trigger for updating the last entry
+	}
+
+	function setLastEntryUpdateTrigger() {
+		const submitButton = document.querySelector('.submit-btn');
+		if (submitButton) {
+			submitButton.addEventListener('click', function () {
+				updateLastEntry(); // Update last entry on submit
+			});
+		}
+	}
+
 	function populateLectureDropdown() {
 		fetch('/lectures')
 			.then((response) => response.json())
@@ -52,7 +68,6 @@ document.addEventListener('DOMContentLoaded', function () {
 				let historyHTML = '<div class="history-page">';
 				if (data.length) {
 					historyHTML += data
-						.reverse()
 						.map(
 							(record) => `
                             <div class="history-card" id="history-card-${
@@ -66,10 +81,10 @@ document.addEventListener('DOMContentLoaded', function () {
 															record.organization
 														}</div>
                             <div class="history-info">Check-in: ${
-															record.check_in_time || 'Not Checked In'
+															record.check_in_time || ''
 														}</div>
                             <div class="history-info">Check-out: ${
-															record.check_out_time || 'Not Checked Out'
+															record.check_out_time || ''
 														}</div>
                             <div class="history-info">Lecture: ${
 															record.lecture_name
@@ -512,42 +527,44 @@ function initializeSubmitFunctionality() {
 					document.getElementById('triggerCamera').src =
 						'/static/qr-border.png'; // Reset the camera icon
 					clearForm(); // Clear form after submission
+					updateLastEntry();
 				}
 			})
 			.catch((error) => {
 				console.error('Error:', error);
 				clearForm(); // Ensure form is cleared even on error
+				updateLastEntry();
 			});
 	});
 }
 
-function displayLastEntry() {
+function updateLastEntry() {
 	fetch('/latest-history')
 		.then((response) => response.json())
 		.then((data) => {
+			const lastEntryDiv = document.querySelector('.last-entry');
 			if (Object.keys(data).length !== 0) {
-				const lastEntryDiv = document.querySelector('.last-entry');
 				lastEntryDiv.innerHTML = `
-                <div>
-                    <div class="history-info">Name: ${data.first_name} ${
+                    <div>
+                        <div class="history-info">Name: ${data.first_name} ${
 					data.last_name
 				}</div>
-                    <div class="history-info">Organization: ${
-											data.organization
-										}</div>
-                    <div class="history-info">Check-in: ${
-											data.check_in_time || 'Not Checked In'
-										}</div>
-                    <div class="history-info">Check-out: ${
-											data.check_out_time || 'Not Checked Out'
-										}</div>
-                    <div class="history-info">Lecture: ${
-											data.lecture_name
-										}</div>
-                </div>
-            `;
+                        <div class="history-info">Organization: ${
+													data.organization
+												}</div>
+                        <div class="history-info">Check-in: ${
+													data.check_in_time || ''
+												}</div>
+                        <div class="history-info">Check-out: ${
+													data.check_out_time || ''
+												}</div>
+                        <div class="history-info">Lecture: ${
+													data.lecture_name
+												}</div>
+                    </div>
+                `;
 			} else {
-				document.querySelector('.last-entry').innerHTML =
+				lastEntryDiv.innerHTML =
 					'<div class="no-history-text">No entries found.</div>';
 			}
 		})
@@ -558,54 +575,9 @@ function displayLastEntry() {
 		});
 }
 
-function updateLastEntry() {
-	fetch('/history')
-		.then((response) => response.json())
-		.then((data) => {
-			if (data.length > 0) {
-				const lastRecord = data[data.length - 1]; // Assuming the latest entry is at the end of the array
-				const lastEntryDiv = document.querySelector('.last-entry');
-				lastEntryDiv.innerHTML = `
-                    <p>Name: ${lastRecord.first_name} ${
-					lastRecord.last_name
-				}</p>
-                    <p>Organization: ${lastRecord.organization}</p>
-                    <p>Check-in: ${
-											lastRecord.check_in_time || 'Not Checked In'
-										}</p>
-                    <p>Check-out: ${
-											lastRecord.check_out_time || 'Not Checked Out'
-										}</p>
-                    <p>Lecture: ${lastRecord.lecture_name}</p>
-                `;
-			}
-		})
-		.catch((error) => {
-			console.error('Failed to fetch last entry:', error);
-			const lastEntryDiv = document.querySelector('.last-entry');
-			lastEntryDiv.innerHTML = '<p>Error loading the latest entry.</p>';
-		});
-}
-
 document.addEventListener('DOMContentLoaded', function () {
 	updateLastEntry(); // Update last entry when the page is loaded
 });
-
-function initializeHomePage() {
-	initializeScanFunctionality();
-	initializeSubmitFunctionality();
-	displayLastEntry();
-	setLastEntryUpdateTrigger();
-}
-
-function setLastEntryUpdateTrigger() {
-	const submitButton = document.querySelector('.submit-btn');
-	if (submitButton) {
-		submitButton.addEventListener('click', function () {
-			updateLastEntry(); // Update last entry on submit
-		});
-	}
-}
 
 function clearForm() {
 	document.getElementById('cameraInput').value = '';

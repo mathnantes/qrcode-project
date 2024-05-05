@@ -22,6 +22,7 @@ class Attendance(db.Model):
     organization = db.Column(db.String(100))
     check_in_time = db.Column(db.DateTime, nullable=True)
     check_out_time = db.Column(db.DateTime, nullable=True)
+    last_modified = db.Column(db.DateTime, default=datetime.utcnow)
     lecture_id = db.Column(db.Integer, db.ForeignKey('lecture.id'))
 
 
@@ -109,6 +110,8 @@ def scan_qr():
         elif action == 'check-out':
             attendance.check_out_time = datetime.utcnow()
 
+        attendance.last_modified = datetime.utcnow()
+
         db.session.commit()
         return jsonify({'image': img_str, 'decoded_data': contact_info})
     return jsonify({'error': 'No QR code detected'}), 400
@@ -153,8 +156,9 @@ def get_history():
         Attendance.id,
         Attendance.first_name, Attendance.last_name,
         Attendance.organization, Attendance.check_in_time,
-        Attendance.check_out_time, Lecture.name.label('lecture_name')
-    ).all()
+        Attendance.check_out_time, Lecture.name.label('lecture_name'),
+        Attendance.last_modified
+    ).order_by(Attendance.last_modified.desc()).all()
     return jsonify([{
         'id': record.id,
         'first_name': record.first_name,
@@ -171,8 +175,9 @@ def get_latest_history():
     latest_record = Attendance.query.join(Lecture).add_columns(
         Attendance.first_name, Attendance.last_name,
         Attendance.organization, Attendance.check_in_time,
-        Attendance.check_out_time, Lecture.name.label('lecture_name')
-    ).order_by(Attendance.id.desc()).first()  # Get the latest entry
+        Attendance.check_out_time, Lecture.name.label('lecture_name'),
+        Attendance.last_modified
+    ).order_by(Attendance.last_modified.desc()).first()  # Get the latest entry
     if latest_record:
         return jsonify({
             'first_name': latest_record.first_name,

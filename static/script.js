@@ -247,6 +247,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				'lecture_id',
 				document.getElementById('lecture-dropdown').value
 			);
+
 			fetch('/scan', {
 				method: 'POST',
 				body: formData,
@@ -259,17 +260,13 @@ document.addEventListener('DOMContentLoaded', function () {
 						console.log('QR Code Data:', data.decoded_data);
 						alert('Attendance recorded successfully!');
 						clearForm(); // Clear form after submission
-						updateLastEntry(); // Update the last entry display
+						updateLastEntry(); // Update the last entry display immediately after recording the attendance
 					}
 				})
 				.catch((error) => {
 					console.error('Error:', error);
 					clearForm(); // Ensure form is cleared even on error
 				});
-			// Reset the image and remove class
-			const imgElement = document.getElementById('triggerCamera');
-			imgElement.src = '/static/qr-border.png';
-			imgElement.classList.remove('scanned-img'); // Remove the class to revert to original size
 		});
 
 	// Function to toggle lecture form visibility
@@ -494,17 +491,25 @@ function updateLastEntry() {
 				const lastRecord = data[data.length - 1]; // Assuming the latest entry is at the end of the array
 				const lastEntryDiv = document.querySelector('.last-entry');
 				lastEntryDiv.innerHTML = `
-                <p>Name: ${lastRecord.first_name} ${lastRecord.last_name}</p>
-                <p>Organization: ${lastRecord.organization}</p>
-                <p>Check-in: ${lastRecord.check_in_time || 'Not Checked In'}</p>
-                <p>Check-out: ${
-									lastRecord.check_out_time || 'Not Checked Out'
-								}</p>
-                <p>Lecture: ${lastRecord.lecture_name}</p>
-            `;
+                    <p>Name: ${lastRecord.first_name} ${
+					lastRecord.last_name
+				}</p>
+                    <p>Organization: ${lastRecord.organization}</p>
+                    <p>Check-in: ${
+											lastRecord.check_in_time || 'Not Checked In'
+										}</p>
+                    <p>Check-out: ${
+											lastRecord.check_out_time || 'Not Checked Out'
+										}</p>
+                    <p>Lecture: ${lastRecord.lecture_name}</p>
+                `;
 			}
 		})
-		.catch((error) => console.error('Failed to fetch last entry:', error));
+		.catch((error) => {
+			console.error('Failed to fetch last entry:', error);
+			const lastEntryDiv = document.querySelector('.last-entry');
+			lastEntryDiv.innerHTML = '<p>Error loading the latest entry.</p>';
+		});
 }
 
 document.addEventListener('DOMContentLoaded', function () {

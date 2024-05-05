@@ -274,7 +274,6 @@ label {
 	max-height: 90px; /* Limit the height */
 	margin-top: 50px;
 	color: #333;
-	border: 2px solid blue;
 }
 
 .last-entry p {
@@ -292,7 +291,6 @@ label {
 	background-color: #f9f9f9;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 	border-radius: 10px;
-	border: 2px solid red;
 }
 
 .history-page {

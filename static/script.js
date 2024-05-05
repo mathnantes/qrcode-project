@@ -122,10 +122,10 @@ document.addEventListener('DOMContentLoaded', function () {
 															record.organization
 														}</div>
                             <div class="history-info">Check-in: ${
-															record.check_in_time || ''
+															record.check_in_time ? record.check_in_time : ''
 														}</div>
                             <div class="history-info">Check-out: ${
-															record.check_out_time || ''
+															record.check_out_time ? record.check_out_time : ''
 														}</div>
                             <div class="history-info">Lecture: ${
 															record.lecture_name
@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				}
 				historyHTML += '</div>';
 				document.querySelector('.history-page').innerHTML = historyHTML;
+				addHistorySwipeListeners(); // Call this function after the content is loaded into the DOM
 			})
 			.catch((error) => console.error('Error loading history:', error));
 	}

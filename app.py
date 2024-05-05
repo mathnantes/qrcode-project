@@ -2,7 +2,11 @@ from flask import Flask, render_template, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 from pyzbar.pyzbar import decode
+from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.platypus import Paragraph
 from reportlab.pdfgen import canvas
 import vobject
 from PIL import Image
@@ -203,53 +207,53 @@ def delete_history(history_id):
 @app.route('/export-history', methods=['GET'])
 def export_history():
     lecture_id = request.args.get('lectureId')
+    filename = "All Lectures History" if not lecture_id else "Filtered History"
     buffer = io.BytesIO()
 
-    # Default name for the PDF file
-    filename = "All Lectures History"
+    # Setting up the document with buffer and page size
+    doc = SimpleDocTemplate(buffer, pagesize=letter, rightMargin=72,
+                            leftMargin=72, topMargin=72, bottomMargin=18)
+    styles = getSampleStyleSheet()
+    flowables = []
 
-    # Query setup
+    # Heading
+    header = Paragraph(f'Attendance History - {filename}', styles['Heading1'])
+    flowables.append(header)
+
+    # Fetch data
     query = Attendance.query.join(Lecture)
     if lecture_id:
         query = query.filter(Lecture.id == lecture_id)
         lecture = Lecture.query.get(lecture_id)
-        if lecture:
-            # Set filename to lecture name if found
-            filename = f"{lecture.name} History"
+        filename = lecture.name if lecture else filename  # Ensure lecture is found
 
     records = query.order_by(Attendance.last_modified.desc()).all()
 
-    # Create PDF
-    p = canvas.Canvas(buffer, pagesize=letter)
-    width, height = letter
-    x = 50
-    y = height - 50
-    p.drawString(x, y, "Attendance History")
-    y -= 40
-
-    # Add the header
-    headers = ["Name", "Organization", "Check-in", "Check-out", "Lecture"]
-    p.drawString(x, y, ' | '.join(headers))
-    y -= 20
-
-    # Add the rows
+    # Prepare data for the table
+    data = [['Name', 'Organization', 'Check-in', 'Check-out', 'Lecture']]
     for record in records:
-        line = [
+        data.append([
             f"{record.first_name} {record.last_name}",
             f"{record.organization}",
-            f"{record.check_in_time.strftime('%Y-%m-%d %H:%M') if record.check_in_time else ''}",
-            f"{record.check_out_time.strftime('%Y-%m-%d %H:%M') if record.check_out_time else ''}",
+            f"{record.check_in_time.strftime('%Y-%m-%d %H:%M') if record.check_in_time else 'N/A'}",
+            f"{record.check_out_time.strftime('%Y-%m-%d %H:%M') if record.check_out_time else 'N/A'}",
             f"{record.lecture.name}"
-        ]
-        p.drawString(x, y, ' | '.join(line))
-        y -= 20
-        if y < 50:
-            p.showPage()
-            y = height - 50
+        ])
 
-    p.save()
+    # Table style
+    table = Table(data, colWidths=[doc.width/5.0]*5)
+    table.setStyle(TableStyle([
+        ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER')
+    ]))
+    flowables.append(table)
 
-    # Move to the beginning of the StringIO buffer
+    # Build the document
+    doc.build(flowables)
+
+    # Prepare response
     buffer.seek(0)
     return Response(buffer.getvalue(), mimetype='application/pdf', headers={'Content-Disposition': f'attachment;filename="{filename}.pdf"'})
 

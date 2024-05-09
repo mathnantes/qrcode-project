@@ -1,0 +1,22 @@
+{
+	"name": "Controle de Presença",
+	"short_name": "Presença",
+	"icons": [
+		{
+			"src": "/static/images/icon-192x192.png",
+			"type": "image/png",
+			"sizes": "192x192"
+		},
+		{
+			"src": "/static/images/icon-192x192.png",
+			"type": "image/png",
+			"sizes": "512x512"
+		}
+	],
+	"start_url": "/",
+	"background_color": "#FFFFFF",
+	"display": "standalone",
+	"scope": "/",
+	"theme_color": "#FFFFFF",
+	"description": "Aplicativo para controle de presença em eventos."
+}

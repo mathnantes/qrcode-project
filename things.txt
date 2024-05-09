@@ -1,8 +1,0 @@
-1. Need to display error if there is a check-out attempt but not a check-in attempt;
-2. There shouldnt be a "Load History" button, the history should be refreshed everytime there's a new submit;
-3. Instead of a lecture ID field to be filled, there should be a dropdown menu with pre-registered lectures to select.
-4. There should be a separate place in the app to register new lectures, so they will show up in the dropdown menu.
-5. Need to format the infos on history. The date and time should be better displayed and the lecture should also be displayed.
-6. There should be pop-ups when a lecture is successfully registered and also when a check-in is successfull.
-7. If the organizer tries to check-out someone from a specific lecture and there wasnt a check-in, the check-out should fail and a pop-up message should show up saying that there was no check-in.
-8. The date and time should be used from the devices's

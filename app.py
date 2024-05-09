@@ -223,9 +223,14 @@ def export_history():
     # Fetch data
     query = Attendance.query.join(Lecture)
     if lecture_id:
-        query = query.filter(Lecture.id == lecture_id)
-        lecture = Lecture.session.get(lecture_id)
-        filename = lecture.name if lecture else filename  # Ensure lecture is found
+        # Corrected this line to use query.get
+        lecture = Lecture.query.get(lecture_id)
+        if lecture:
+            query = query.filter(Lecture.id == lecture_id)
+            filename = lecture.name  # Update filename if lecture is found
+        else:
+            # Handle case where lecture is not found
+            return jsonify({'error': 'Lecture not found'}), 404
 
     records = query.order_by(Attendance.last_modified.desc()).all()
 

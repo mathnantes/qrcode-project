@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="/static/styles.css" />
+		<link rel="stylesheet" href="/static/css/styles.css" />
 		<link rel="manifest" href="/manifest.json" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta
@@ -32,7 +32,7 @@
 						/>
 						<label for="cameraInput">
 							<img
-								src="/static/qr-border.png"
+								src="/static/images/qr-border.png"
 								alt="Scan QR Code"
 								class="home-icon"
 								id="triggerCamera"
@@ -56,10 +56,10 @@
 							</label>
 						</div>
 						<select id="lecture-dropdown" class="lecture-dropdown">
-							<option disabled selected>Select Lecture</option>
+							<option disabled selected>Selecionar Palestra</option>
 							<!-- Dynamic Options Added Here -->
 						</select>
-						<button class="submit-btn">Register</button>
+						<button class="submit-btn">Registrar</button>
 					</div>
 				</div>
 				<div class="last-entry"></div>
@@ -68,21 +68,38 @@
 				<nav>
 					<div class="nav-bar">
 						<div class="nav-button home selected" id="home-btn">
-							<img src="/static/home-icon.png" alt="Home" />
+							<img src="/static/images/home-icon.png" alt="Home" />
 						</div>
 						<div class="nav-button history" id="history-btn">
-							<img src="/static/history-icon.png" alt="History" />
+							<img src="/static/images/history-icon.png" alt="History" />
 						</div>
 						<div class="nav-button lectures" id="lectures-btn">
-							<img src="/static/lectures-icon.png" alt="Lectures" />
+							<img src="/static/images/lectures-icon.png" alt="Lectures" />
 						</div>
 						<div class="nav-button settings" id="settings-btn">
-							<img src="/static/settings-icon.png" alt="Settings" />
+							<img src="/static/images/settings-icon.png" alt="Settings" />
 						</div>
 					</div>
 				</nav>
 			</div>
 		</div>
-		<script src="/static/script.js"></script>
+		<script src="/static/js/script.js"></script>
+		<script>
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', function () {
+					navigator.serviceWorker.register('/service-worker.js').then(
+						function (registration) {
+							console.log(
+								'ServiceWorker registration successful with scope: ',
+								registration.scope
+							);
+						},
+						function (err) {
+							console.log('ServiceWorker registration failed: ', err);
+						}
+					);
+				});
+			}
+		</script>
 	</body>
 </html>

@@ -564,7 +564,7 @@ function initializeSubmitFunctionality() {
 					console.log('QR Code Data:', data.decoded_data);
 					alert('Registrado com sucesso!');
 					document.getElementById('triggerCamera').src =
-						'/static/qr-border.png'; // Reset the camera icon
+						'/static/images/qr-border.png'; // Reset the camera icon
 					clearForm(); // Clear form after submission
 					updateLastEntry();
 				}
@@ -625,6 +625,6 @@ function clearForm() {
 
 	// Reset the image source to the qr-border.png
 	const imgElement = document.getElementById('triggerCamera');
-	imgElement.src = '/static/qr-border.png'; // Make sure the path is correct
+	imgElement.src = '/static/images/qr-border.png'; // Make sure the path is correct
 	imgElement.classList.remove('scanned-img'); // If you add a class that changes the display on scan
 }

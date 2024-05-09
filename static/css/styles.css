@@ -36,7 +36,7 @@ body {
 .circle {
 	width: 100px;
 	height: 100px;
-	background-image: url('logo.png');
+	background-image: url('../images/logo.png');
 	background-size: cover;
 	background-position: center;
 	border-radius: 50%;
@@ -486,7 +486,7 @@ label {
 	transform: translateY(-50%) translateX(100%); /* Adjust horizontally outside the card */
 	width: 40px;
 	height: 40px;
-	background-image: url('/static/delete.png');
+	background-image: url('../images/delete.png');
 	background-size: cover;
 	background-position: center;
 	opacity: 0; /* Start hidden */

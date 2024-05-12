@@ -14,6 +14,7 @@ import cv2
 import numpy as np
 import base64
 import io
+import os
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///attendance.db'
@@ -266,4 +267,7 @@ def export_history():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Use the PORT environment variable, defaulting to 5000 if not set
+    port = int(os.environ.get('PORT', 5000))
+    # Set debug to False for production
+    app.run(host='0.0.0.0', port=port, debug=False)

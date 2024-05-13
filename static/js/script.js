@@ -609,8 +609,7 @@ function updateLastEntry() {
 		})
 		.catch((error) => {
 			console.error('Error fetching the latest history entry:', error);
-			document.querySelector('.last-entry').innerHTML =
-				'<div class="no-history-text">Error loading entry.</div>';
+			document.querySelector('.last-entry').innerHTML = '<div class="no-history-text">Error loading entry.</div>';
 		});
 }
 
@@ -627,4 +626,8 @@ function clearForm() {
 	const imgElement = document.getElementById('triggerCamera');
 	imgElement.src = '/static/images/qr-border.png'; // Make sure the path is correct
 	imgElement.classList.remove('scanned-img'); // If you add a class that changes the display on scan
+}
+
+function refreshPage() {
+	window.location.reload(true); // Force reload from the server, not cache
 }

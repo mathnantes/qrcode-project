@@ -29,30 +29,75 @@ body {
 
 .top {
 	flex-direction: column;
-	height: 20vh;
+	height: 10vh; /* Smaller height */
 	background-color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	width: 100%;
 }
 
-.circle {
-	width: 100px;
-	height: 100px;
-	background-image: url('../images/logo.png');
-	background-size: cover;
-	background-position: center;
-	border-radius: 50%;
+h1 {
+	font-family: 'Montserrat Alternates', sans-serif; /* Sets the Poppins font */
+	font-size: 26px; /* Slightly larger font size for emphasis */
+	color: #343434; /* Dark grey for a sleek look */
+	margin: 0;
+	padding: 10px 0;
+	font-weight: 700; /* Bold font weight for more impact */
 }
 
-.title {
-	font-size: 10px;
+.refresh-button {
+	position: absolute; /* Positions the button relative to its first positioned (non-static) ancestor element */
+	top: 10px; /* Adjusts the top margin to align within the top div */
+	right: 10px; /* Positions the button on the right */
+	background: none; /* No background to keep it minimal */
+	border: none; /* No border for a cleaner look */
+	cursor: pointer; /* Changes the cursor to a pointer on hover */
+	padding: 5px; /* Minimal padding to increase touch area without increasing visual bulk */
+	z-index: 10; /* Ensures the button is above other content in the div */
+}
+
+.refresh-button img {
+	width: 24px; /* Small and unobtrusive size */
+	height: auto; /* Maintains aspect ratio */
+}
+
+.divider {
+	width: 100%; /* Full width */
+	height: 2px; /* Line thickness */
+	background-color: #9badbf; /* Color to match the app's theme */
+	margin-top: 10px; /* Space above the line */
 }
 
 .middle {
+	display: flex;
 	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	height: 65vh;
+	justify-content: space-evenly; /* Evenly distribute space between items */
+	align-items: center; /* Center items horizontally */
+	height: auto; /* Adjust height automatically based on content */
+	flex-grow: 1; /* Allow this div to grow and fill available space */
 	background-color: white;
-	overflow-y: hidden; /* Make middle section scrollable */
+	padding: 20px 0; /* Add vertical padding */
+	box-sizing: border-box; /* Include padding and border in the height calculation */
+	overflow-y: auto; /* Enable scrolling if content exceeds div height */
+}
+
+/* Ensure direct children of .middle take full width */
+.middle > * {
+	width: 100%; /* Make children full width to control spacing better */
+	max-width: 600px; /* Max width for better control on larger screens */
+	margin: 20px auto; /* Provide consistent vertical margin */
+	box-sizing: border-box; /* Include padding and border in width calculation */
+}
+
+.scan-container,
+.attendance-options,
+.lecture-dropdown,
+.submit-btn,
+.last-entry {
+	margin-top: 15px; /* Adds margin on top for separation from other elements */
+	margin-bottom: 15px; /* Adds margin at the bottom for separation */
 }
 
 .fade-out {
@@ -96,11 +141,11 @@ body {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	margin-top: -40px;
-	position: relative;
 }
 
 .scan {
+	position: relative;
+	bottom: 70px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -110,8 +155,6 @@ body {
 	border-radius: 15%;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19);
 	overflow: hidden;
-	position: relative;
-	margin-top: 50px;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -132,7 +175,6 @@ body {
 	flex-direction: column;
 	align-items: center;
 	width: 90%;
-	margin: 20px auto;
 }
 
 label {
@@ -141,21 +183,20 @@ label {
 }
 
 .options {
-	margin-top: 20px;
 	display: flex;
 	justify-content: center;
 	width: 100%;
 }
 
 .radio-option {
+	position: relative;
+	bottom: 60px;
 	display: flex;
 	align-items: center;
-	margin: 0 15px;
-	margin-top: -25px;
 	font-size: 18px;
 	color: #343434;
-	position: relative;
 	cursor: pointer;
+	margin-right: 20px;
 }
 
 .radio-option input[type='radio'] {
@@ -205,17 +246,17 @@ label {
 }
 
 .lecture-dropdown {
-	margin-top: 10px;
+	position: relative;
+	bottom: 50px;
 	padding: 8px 12px;
 	border-radius: 5px;
-	width: 80%;
-	height: 40px;
 	background-color: #fff;
 	border: 2px solid #bbb;
-	color: #343434;
 	font-size: 16px;
-	transition: all 0.3s ease;
-	appearance: none;
+	width: 80%;
+	height: 40px;
+	color: #343434;
+	appearance: none; /* Removes default system appearance */
 	cursor: pointer;
 }
 
@@ -234,18 +275,16 @@ label {
 }
 
 .submit-btn {
-	margin-top: 15px;
-	padding: 10px 20px;
-	font-size: 16px;
+	position: relative;
+	bottom: 50px;
+	padding: 10px 20px; /* Ensures button has adequate clickable area */
+	font-size: 16px; /* Keeps font size readable */
 	color: white;
 	background-color: #343434;
 	border: none;
 	border-radius: 80px;
 	width: 200px;
 	cursor: pointer;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.19);
-	margin-top: 20px;
-	margin-bottom: -50px;
 }
 
 .submit-btn:hover {
@@ -254,20 +293,20 @@ label {
 
 /* LAST ENTRY */
 .last-entry {
-	width: 90%; /* Adjust width as needed */
-	max-width: 600px; /* Set a max-width for larger screens */
-	margin: 20px auto; /* Center the div */
+	position: absolute;
+	bottom: 15%;
+	width: 90%;
+	max-width: 600px;
+	min-height: 135px;
 	padding: 15px;
-	background-color: #f0f0f0; /* Light grey background */
+	background-color: #f0f0f0;
 	border-radius: 10px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 	font-size: 14px;
 	line-height: 1.5;
 	display: flex;
-	flex-direction: column; /* Organize content in a column */
+	flex-direction: column;
 	justify-content: space-around;
-	max-height: 90px; /* Limit the height */
-	margin-top: 50px;
 	color: #333;
 }
 
@@ -350,8 +389,8 @@ label {
 	padding: 8px 12px;
 	border-radius: 5px;
 	width: 100%;
-	max-width: 300px; /* Ensures the dropdown does not stretch too wide on larger screens */
-	min-width: 150px;
+	max-width: 40%; /* Ensures the dropdown does not stretch too wide on larger screens */
+	min-width: 30%;
 	border: 2px solid #bbb;
 	background-color: #fff;
 	color: #343434;
@@ -383,8 +422,8 @@ label {
 	vertical-align: middle;
 	transition: background-color 0.3s;
 	width: auto; /* Adjust width to be auto so it expands with content */
-	min-width: 50%; /* Ensure it's at least full width of container */
-	margin-left: 30px;
+	min-width: 40%; /* Ensure it's at least full width of container */
+	margin-left: 10px;
 }
 
 .export-btn:hover {
@@ -496,6 +535,7 @@ label {
 }
 
 .add-lecture-btn {
+	margin-top: -65px;
 	display: inline-block; /* Keeps the button in line but allows for sizing */
 	padding: 5px 10px; /* Padding for aesthetic spacing */
 	font-size: 16px; /* Font size for readability */
@@ -559,12 +599,12 @@ label {
 }
 
 .bottom {
+	position: relative;
 	height: 15vh;
 	background-color: #9badbf;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	position: relative;
 	width: 100%;
 }
 

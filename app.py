@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, jsonify, Response
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from datetime import datetime, timedelta
 from pyzbar.pyzbar import decode
 from reportlab.lib import colors
@@ -20,6 +21,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///attendance.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 class Attendance(db.Model):

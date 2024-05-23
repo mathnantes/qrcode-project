@@ -1,132 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-		/>
-		<link rel="stylesheet" href="/static/css/styles.css" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link
-			href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@100&display=swap"
-			rel="stylesheet"
-		/>
-		<link
-			rel="icon"
-			href="{{ url_for('static', filename='images/favicon.ico') }}"
-		/>
-		<link
-			rel="manifest"
-			href="{{ url_for('static', filename='manifest.json') }}"
-		/>
-		<link
-			rel="apple-touch-icon"
-			href="{{ url_for('static', filename='images/apple-touch-icon.png') }}"
-		/>
+<head>
+    <meta charset="UTF-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@100&display=swap"
+        rel="stylesheet"
+    />
+    <link
+        rel="icon"
+        href="{{ url_for('static', filename='images/favicon.ico') }}"
+    />
+    <link
+        rel="manifest"
+        href="{{ url_for('static', filename='manifest.json') }}"
+    />
+    <link
+        rel="apple-touch-icon"
+        href="{{ url_for('static', filename='images/apple-touch-icon.png') }}"
+    />
 
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta
-			name="apple-mobile-web-app-status-bar-style"
-			content="black-translucent"
-		/>
-		<meta name="apple-mobile-web-app-title" content="Controle de Presença" />
-		<title>Arrivus</title>
-	</head>
-	<body>
-		<div class="container">
-			<div class="top">
-				<h1>Arrivus</h1>
-				<button class="refresh-button" onclick="refreshPage();">
-					<img
-						src="{{ url_for('static', filename='images/refresh-icon.svg') }}"
-						alt="Refresh"
-					/>
-				</button>
-				<div class="divider"></div>
-			</div>
-			<div class="middle" id="content-area">
-				<!-- Default Home Content -->
-				<div class="scan-container">
-					<div class="scan">
-						<input
-							type="file"
-							accept="image/*"
-							capture="camera"
-							id="cameraInput"
-							style="display: none"
-						/>
-						<label for="cameraInput">
-							<img
-								src="/static/images/qr-border.png"
-								alt="Scan QR Code"
-								class="home-icon"
-								id="triggerCamera"
-							/>
-						</label>
-					</div>
-					<div class="attendance-options">
-						<div class="options">
-							<label class="radio-option">
-								<input
-									type="radio"
-									name="attendance"
-									value="check-in"
-									checked
-								/>
-								Check-in
-							</label>
-							<label class="radio-option">
-								<input type="radio" name="attendance" value="check-out" />
-								Check-out
-							</label>
-						</div>
-						<select id="lecture-dropdown" class="lecture-dropdown">
-							<option disabled selected>Selecionar Palestra</option>
-							<!-- Dynamic Options Added Here -->
-						</select>
-						<button class="submit-btn">Registrar</button>
-					</div>
-				</div>
-				<div class="last-entry"></div>
-			</div>
-			<div class="bottom">
-				<nav>
-					<div class="nav-bar">
-						<div class="nav-button home selected" id="home-btn">
-							<img src="/static/images/home-icon.png" alt="Home" />
-						</div>
-						<div class="nav-button history" id="history-btn">
-							<img src="/static/images/history-icon.png" alt="History" />
-						</div>
-						<div class="nav-button lectures" id="lectures-btn">
-							<img src="/static/images/lectures-icon.png" alt="Lectures" />
-						</div>
-						<div class="nav-button settings" id="settings-btn">
-							<img src="/static/images/settings-icon.png" alt="Settings" />
-						</div>
-					</div>
-				</nav>
-			</div>
-		</div>
-		<script src="/static/js/script.js"></script>
-		<script>
-			if ('serviceWorker' in navigator) {
-				window.addEventListener('load', function () {
-					navigator.serviceWorker.register('/service-worker.js').then(
-						function (registration) {
-							console.log(
-								'ServiceWorker registration successful with scope: ',
-								registration.scope
-							);
-						},
-						function (err) {
-							console.log('ServiceWorker registration failed: ', err);
-						}
-					);
-				});
-			}
-		</script>
-	</body>
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="Controle de Presença" />
+    <title>Arrivus</title>
+</head>
+<body>
+    <div class="container">
+        <div class="top">
+            <h1>Arrivus</h1>
+            <button class="refresh-button" onclick="refreshPage();">
+                <img
+                    src="{{ url_for('static', filename='images/refresh-icon.svg') }}"
+                    alt="Refresh"
+                />
+            </button>
+            <div class="divider"></div>
+        </div>
+        <div class="middle" id="content-area">
+            <!-- Default Home Content -->
+            <div class="scan-container">
+                <div class="scan">
+                    <input
+                        type="file"
+                        accept="image/*"
+                        capture="camera"
+                        id="cameraInput"
+                        style="display: none"
+                    />
+                    <label for="cameraInput">
+                        <img
+                            src="/static/images/qr-border.png"
+                            alt="Scan QR Code"
+                            class="home-icon"
+                            id="triggerCamera"
+                        />
+                    </label>
+                </div>
+                <div class="attendance-options">
+                    <div class="options">
+                        <label class="radio-option">
+                            <input
+                                type="radio"
+                                name="attendance"
+                                value="check-in"
+                                checked
+                            />
+                            Check-in
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="attendance" value="check-out" />
+                            Check-out
+                        </label>
+                    </div>
+                    <select id="lecture-dropdown" class="lecture-dropdown">
+                        <option disabled selected>Selecionar Palestra</option>
+                        <!-- Dynamic Options Added Here -->
+                    </select>
+                    <button class="submit-btn">Registrar</button>
+                </div>
+            </div>
+            <div class="last-entry"></div>
+        </div>
+        <div class="bottom">
+            <nav>
+                <div class="nav-bar">
+                    <div class="nav-button home selected" id="home-btn">
+                        <img src="/static/images/home-icon.png" alt="Home" />
+                    </div>
+                    <div class="nav-button history" id="history-btn">
+                        <img src="/static/images/history-icon.png" alt="History" />
+                    </div>
+                    <div class="nav-button lectures" id="lectures-btn">
+                        <img src="/static/images/lectures-icon.png" alt="Lectures" />
+                    </div>
+                    <div class="nav-button settings" id="settings-btn">
+                        <img src="/static/images/settings-icon.png" alt="Settings" />
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <script src="/static/js/script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function () {
+                navigator.serviceWorker.register('/service-worker.js').then(
+                    function (registration) {
+                        console.log(
+                            'ServiceWorker registration successful with scope: ',
+                            registration.scope
+                        );
+                    },
+                    function (err) {
+                        console.log('ServiceWorker registration failed: ', err);
+                    }
+                );
+            });
+        }
+    </script>
+</body>
 </html>

@@ -639,29 +639,93 @@ function clearForm() {
 	imgElement.classList.remove('scanned-img'); // If you add a class that changes the display on scan
 }
 
-function refreshPage() {
-	window.location.reload(true); // Force reload from the server, not cache
-}
-
 document.addEventListener('DOMContentLoaded', function () {
 	let deferredPrompt;
 	const installContainer = document.getElementById('install-container');
 	const installButton = document.getElementById('install-button');
 	const mainContent = document.getElementById('main-content');
+	const loginContainer = document.getElementById('login-container');
+	const loginForm = document.getElementById('login-form');
+	const loginError = document.getElementById('login-error');
 
-	// Show the install button if the PWA is not installed
+	const validUsers = {
+		user: '000000',
+		admin: '696969',
+	};
+
+	function isIos() {
+		const userAgent = window.navigator.userAgent.toLowerCase();
+		return /iphone|ipad|ipod/.test(userAgent);
+	}
+
+	function isInStandaloneMode() {
+		return (
+			window.matchMedia('(display-mode: standalone)').matches ||
+			window.navigator.standalone
+		);
+	}
+
+	function showInstallPrompt() {
+		installContainer.style.display = 'block';
+	}
+
+	function hideInstallPrompt() {
+		installContainer.style.display = 'none';
+	}
+
+	function showLoginForm() {
+		loginContainer.style.display = 'block';
+	}
+
+	function hideLoginForm() {
+		loginContainer.style.display = 'none';
+	}
+
+	function showMainContent() {
+		mainContent.style.display = 'block';
+	}
+
+	function hideMainContent() {
+		mainContent.style.display = 'none';
+	}
+
+	loginForm.addEventListener('submit', function (event) {
+		event.preventDefault();
+		const username = document.getElementById('username').value;
+		const password = document.getElementById('password').value;
+
+		if (validUsers[username] && validUsers[username] === password) {
+			localStorage.setItem('loggedIn', 'true');
+			hideLoginForm();
+			showMainContent();
+		} else {
+			loginError.style.display = 'block';
+		}
+	});
+
+	function checkLogin() {
+		if (localStorage.getItem('loggedIn') === 'true') {
+			hideLoginForm();
+			showMainContent();
+		} else {
+			showLoginForm();
+		}
+	}
+
 	window.addEventListener('beforeinstallprompt', (e) => {
 		e.preventDefault();
 		deferredPrompt = e;
-		installContainer.style.display = 'block';
+		if (!isInStandaloneMode() && !isIos()) {
+			showInstallPrompt();
+		}
 
 		installButton.addEventListener('click', () => {
-			installContainer.style.display = 'none';
+			hideInstallPrompt();
 			deferredPrompt.prompt();
 			deferredPrompt.userChoice.then((choiceResult) => {
 				if (choiceResult.outcome === 'accepted') {
 					console.log('Usuário aceitou o prompt de instalação');
-					showMainContent();
+					showLoginForm();
 				} else {
 					console.log('Usuário rejeitou o prompt de instalação');
 				}
@@ -670,34 +734,32 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
-	// Check if the PWA is already installed
-	if (window.matchMedia('(display-mode: standalone)').matches) {
-		showMainContent();
-	} else {
-		installContainer.style.display = 'block';
-	}
-
-	// Show custom install message for iOS
-	const isIos = () => {
-		const userAgent = window.navigator.userAgent.toLowerCase();
-		return /iphone|ipad|ipod/.test(userAgent);
-	};
-
-	const isInStandaloneMode = () =>
-		'standalone' in window.navigator && window.navigator.standalone;
-
-	if (isIos() && !isInStandaloneMode()) {
-		installContainer.style.display = 'block';
+	if (isInStandaloneMode()) {
+		hideInstallPrompt();
+		checkLogin();
+	} else if (isIos() && !isInStandaloneMode()) {
+		showInstallPrompt();
 		installButton.textContent = 'Instalar Aplicativo (iOS)';
 		installButton.addEventListener('click', () => {
 			alert(
 				'Para instalar este aplicativo, toque no ícone de compartilhamento e depois em "Adicionar à Tela de Início".'
 			);
 		});
+	} else {
+		showInstallPrompt();
 	}
 
-	function showMainContent() {
-		installContainer.style.display = 'none';
-		mainContent.style.display = 'block';
+	window.logout = function () {
+		localStorage.removeItem('loggedIn');
+		hideMainContent();
+		showLoginForm();
+	};
+
+	if (isInStandaloneMode()) {
+		checkLogin();
 	}
 });
+
+function refreshPage() {
+	window.location.reload(true); // Force reload from the server, not cache
+}

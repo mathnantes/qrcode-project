@@ -37,6 +37,19 @@
 		<div id="install-container" style="display: none">
 			<button id="install-button">Instalar Aplicativo</button>
 		</div>
+		<div id="login-container" style="display: none">
+			<form id="login-form">
+				<h1>Login</h1>
+				<label for="username">Usuário:</label>
+				<input type="text" id="username" name="username" required />
+				<label for="password">Senha:</label>
+				<input type="password" id="password" name="password" required />
+				<button type="submit">Entrar</button>
+				<div id="login-error" style="display: none">
+					Usuário ou senha incorretos!
+				</div>
+			</form>
+		</div>
 		<div class="container" id="main-content" style="display: none">
 			<div class="top">
 				<h1>Arrivus</h1>
@@ -46,6 +59,7 @@
 						alt="Refresh"
 					/>
 				</button>
+				<button class="logout-button" onclick="logout();">Sair</button>
 				<div class="divider"></div>
 			</div>
 			<div class="middle" id="content-area">

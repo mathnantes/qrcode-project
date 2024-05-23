@@ -63,6 +63,22 @@ h1 {
 	height: auto; /* Maintains aspect ratio */
 }
 
+.logout-button {
+	position: absolute;
+	top: 10px;
+	right: 60px; /* Adjusted to be beside the refresh button */
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 5px;
+	font-size: 16px;
+	color: #007bff;
+}
+
+.logout-button:hover {
+	color: #0056b3;
+}
+
 .divider {
 	width: 100%; /* Full width */
 	height: 2px; /* Line thickness */
@@ -664,57 +680,58 @@ label {
 	margin-right: auto;
 }
 
-/* Skeleton loading animation */
-@keyframes skeleton-loading {
-	0% {
-		background-color: #ddd;
-	}
-	50% {
-		background-color: #ccc;
-	}
-	100% {
-		background-color: #ddd;
-	}
-}
-
-.skeleton {
-	animation: skeleton-loading 1.5s infinite;
-}
-
-.skeleton-card {
-	background: #f0f0f0;
-	border-radius: 10px;
-	margin: 10px;
+#login-container {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: #fff;
 	padding: 20px;
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.skeleton-header {
-	width: 60%;
-	height: 20px;
-	margin-bottom: 10px;
 	border-radius: 5px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+	text-align: center;
+	width: 300px;
 }
 
-.skeleton-text {
-	width: 80%;
-	height: 15px;
+#login-form h1 {
+	font-family: 'Montserrat Alternates', sans-serif;
+	font-size: 24px;
+	color: #343434;
+}
+
+#login-form label {
+	display: block;
+	margin: 10px 0 5px;
+	font-size: 16px;
+}
+
+#login-form input {
+	width: 100%;
+	padding: 10px;
 	margin-bottom: 10px;
+	border: 1px solid #ccc;
 	border-radius: 5px;
+	font-size: 16px;
 }
 
-.skeleton-last-entry {
-	height: 135px;
-	width: 90%;
-	max-width: 600px;
-	margin: 15px 0;
-	border-radius: 10px;
-	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+#login-form button {
+	background: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
 }
 
-/* Placeholder specific styles */
-.last-entry .skeleton-card {
-	height: 135px;
+#login-form button:hover {
+	background: #0056b3;
+}
+
+#login-error {
+	color: red;
+	margin-top: 10px;
 }
 
 /* Center the install-container without interfering with other elements */

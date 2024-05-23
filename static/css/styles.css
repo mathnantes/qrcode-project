@@ -664,6 +664,59 @@ label {
 	margin-right: auto;
 }
 
+/* Skeleton loading animation */
+@keyframes skeleton-loading {
+	0% {
+		background-color: #ddd;
+	}
+	50% {
+		background-color: #ccc;
+	}
+	100% {
+		background-color: #ddd;
+	}
+}
+
+.skeleton {
+	animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-card {
+	background: #f0f0f0;
+	border-radius: 10px;
+	margin: 10px;
+	padding: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-header {
+	width: 60%;
+	height: 20px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+}
+
+.skeleton-text {
+	width: 80%;
+	height: 15px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+}
+
+.skeleton-last-entry {
+	height: 135px;
+	width: 90%;
+	max-width: 600px;
+	margin: 15px 0;
+	border-radius: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Placeholder specific styles */
+.last-entry .skeleton-card {
+	height: 135px;
+}
+
 /* Center the install-container without interfering with other elements */
 #install-container {
 	position: fixed;

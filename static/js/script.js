@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					dropdown.appendChild(option);
 				});
 			})
-			.catch((error) => console.error('Failed to load lectures:', error));
+			.catch((error) => console.error('Falha ao carregar palestras:', error));
 	}
 
 	function fetchHistory(callback) {
@@ -108,14 +108,14 @@ document.addEventListener('DOMContentLoaded', function () {
 							link.click();
 							document.body.removeChild(link);
 						})
-						.catch((error) => console.error('Error downloading PDF:', error));
+						.catch((error) => console.error('Erro ao baixar PDF:', error));
 				}
 
 				loadFilteredHistory(); // Load all history initially
 				callback();
 			})
 			.catch((error) =>
-				console.error('Failed to load lectures for filter:', error)
+				console.error('Falha ao carregar palestras para filtro:', error)
 			);
 	}
 
@@ -148,13 +148,13 @@ document.addEventListener('DOMContentLoaded', function () {
 					});
 				} else {
 					historyHTML +=
-						'<div class="no-history"><div class="no-history-text">No attendance records available.</div></div>';
+						'<div class="no-history"><div class="no-history-text">Nenhum registro disponível.</div></div>';
 				}
 				historyHTML += '</div>';
 				document.querySelector('.history-page').innerHTML = historyHTML;
 				addHistorySwipeListeners(); // Call this function after the content is loaded into the DOM
 			})
-			.catch((error) => console.error('Error loading history:', error));
+			.catch((error) => console.error('Erro ao carregar histórico:', error));
 	}
 
 	function fetchLectures(callback) {
@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				appendAddLectureButton(); // Function to append the add lecture button
 				callback();
 			})
-			.catch((error) => console.error('Error loading lectures:', error));
+			.catch((error) => console.error('Erro ao carregar palestras:', error));
 	}
 
 	function appendAddLectureButton() {
@@ -264,7 +264,9 @@ document.addEventListener('DOMContentLoaded', function () {
 						fetchLectures(() => {});
 						toggleLectureForm();
 					})
-					.catch((error) => console.error('Error registering lecture:', error));
+					.catch((error) =>
+						console.error('Erro ao registrar palestra:', error)
+					);
 			}
 		});
 
@@ -336,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					}
 				})
 				.catch((error) => {
-					console.error('Error:', error);
+					console.error('Erro:', error);
 					clearForm(); // Ensure form is cleared even on error
 				});
 		});
@@ -485,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					}, 500); // Match the timeout with the duration of the transition
 				}
 			})
-			.catch((error) => console.error('Error deleting lecture:', error));
+			.catch((error) => console.error('Erro ao deletar palestra:', error));
 	}
 
 	function deleteHistory(historyId, card) {
@@ -506,7 +508,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					}, 500); // Match the timeout with the duration of the transition
 				}
 			})
-			.catch((error) => console.error('Error deleting history:', error));
+			.catch((error) => console.error('Erro ao deletar registro:', error));
 	}
 });
 
@@ -542,7 +544,7 @@ function initializeSubmitFunctionality() {
 		event.preventDefault();
 
 		if (!selectedFile) {
-			alert('Please select an image to scan.');
+			alert('Por favor, selecione uma imagem para escanear.');
 			return;
 		}
 
@@ -550,13 +552,13 @@ function initializeSubmitFunctionality() {
 			'input[name="attendance"]:checked'
 		);
 		if (!attendanceRadio) {
-			alert('Please select either check-in or check-out.');
+			alert('Por favor, selecione check-in ou check-out.');
 			return;
 		}
 
 		const lectureDropdown = document.getElementById('lecture-dropdown');
 		if (lectureDropdown.selectedIndex === 0) {
-			alert('Please select a lecture.');
+			alert('Por favor, selecione uma palestra.');
 			return;
 		}
 
@@ -583,7 +585,7 @@ function initializeSubmitFunctionality() {
 				}
 			})
 			.catch((error) => {
-				console.error('Error:', error);
+				console.error('Erro:', error);
 				clearForm(); // Ensure form is cleared even on error
 				updateLastEntry();
 			});
@@ -616,9 +618,9 @@ function updateLastEntry() {
 			}
 		})
 		.catch((error) => {
-			console.error('Error fetching the latest history entry:', error);
+			console.error('Erro ao buscar o último registro de histórico:', error);
 			document.querySelector('.last-entry').innerHTML =
-				'<div class="no-history-text">Error loading entry.</div>';
+				'<div class="no-history-text">Erro ao carregar registro.</div>';
 		});
 }
 

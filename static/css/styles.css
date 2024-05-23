@@ -75,7 +75,7 @@ h1 {
 	flex-direction: column;
 	justify-content: space-evenly; /* Evenly distribute space between items */
 	align-items: center; /* Center items horizontally */
-	height: auto; /* Adjust height automatically based on content */
+	height: 75vh;
 	flex-grow: 1; /* Allow this div to grow and fill available space */
 	background-color: white;
 	padding: 20px 0; /* Add vertical padding */
@@ -459,12 +459,17 @@ label {
 	opacity: 0;
 	z-index: 1000;
 	transition: transform 0.5s, opacity 0.5s;
+	height: 55%;
 }
 
 .lecture-form h1 {
 	font-size: 15pt;
 	text-align: center;
 	margin: 1px;
+}
+
+.lecture-form .submit-btn {
+	margin-top: 50px;
 }
 
 .input-group {
@@ -642,4 +647,52 @@ label {
 
 .nav-button.selected {
 	background-color: #c8d0d8;
+}
+
+.developing-text {
+	font-family: 'Montserrat Alternates', sans-serif;
+	font-size: 24px;
+	color: #343434;
+	text-align: center;
+	margin-top: 50px;
+	padding: 20px;
+	background-color: #f0f0f0;
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	width: 80%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+/* Center the install-container without interfering with other elements */
+#install-container {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(255, 255, 255, 0.95);
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+	text-align: center;
+}
+
+#install-button {
+	background: #007bff;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+#install-button:hover {
+	background: #0056b3;
+}
+
+/* Hide the main content initially */
+#main-content {
+	display: none;
 }

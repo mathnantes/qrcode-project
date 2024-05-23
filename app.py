@@ -182,7 +182,7 @@ def delete_history(history_id):
 @app.route('/export-history', methods=['GET'])
 def export_history():
     lecture_id = request.args.get('lectureId')
-    filename = "All Lectures History" if not lecture_id else "Filtered History"
+    filename = "All_Lectures_History.pdf" if not lecture_id else "Filtered_History.pdf"
     buffer = io.BytesIO()
 
     # Setting up the document with buffer and page size
@@ -201,7 +201,8 @@ def export_history():
         lecture = Lecture.query.get(lecture_id)
         if lecture:
             query = query.filter(Lecture.id == lecture_id)
-            filename = lecture.name  # Update filename if lecture is found
+            # Update filename if lecture is found
+            filename = lecture.name.replace(" ", "_") + "_History.pdf"
         else:
             return jsonify({'error': 'Lecture not found'}), 404
 
@@ -232,7 +233,9 @@ def export_history():
 
     # Prepare response
     buffer.seek(0)
-    return Response(buffer.getvalue(), mimetype='application/pdf', headers={'Content-Disposition': f'attachment;filename="{filename}.pdf"'})
+    return Response(buffer.getvalue(), mimetype='application/pdf', headers={
+        'Content-Disposition': f'attachment; filename="{filename}"'
+    })
 
 
 if __name__ == '__main__':

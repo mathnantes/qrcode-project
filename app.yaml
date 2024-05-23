@@ -3,7 +3,7 @@ env: flex
 entrypoint: gunicorn -b :$PORT app:app
 
 env_variables:
-  DATABASE_URL: "your-database-url"
+  DATABASE_URL: 'postgresql://ucmdl7jh4u14ts:p3c6d44f1bbd7d3bbf90a6d59ccec442290a1f0ba094e87a01d42ba918ccff95f@c6sfjnr30ch74e.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/dfrtsiuh6hilvi'
 
 automatic_scaling:
   min_num_instances: 1
@@ -17,7 +17,7 @@ resources:
   disk_size_gb: 10
 
 handlers:
-- url: /static
-  static_dir: static
-- url: /.*
-  script: auto
+  - url: /static
+    static_dir: static
+  - url: /.*
+    script: auto
